@@ -2,8 +2,10 @@ package com.example.project_sesjopoli;
 
 import javafx.application.Application;
 import javafx.scene.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
@@ -19,6 +21,10 @@ public class Game extends Application {
         Rectangle board = new Rectangle(2000, 2000);
         BorderPane bp = new BorderPane();
 
+        Image image = new Image(getClass().getResourceAsStream("/planszav5.png"));
+        ImagePattern imagePattern = new ImagePattern(image);
+        board.setFill(imagePattern);
+
         Group group = new Group();
         group.getChildren().add(board);
 
@@ -28,6 +34,11 @@ public class Game extends Application {
         sub.setCamera(camera);
         sub.setFill(Color.rgb(175, 255, 112));
         bp.setLeft(sub);
+
+        BorderPane bpInfo = new BorderPane();
+        bpInfo.setStyle("-fx-background-color: rgb(175, 125, 112);");
+        SubScene sub2 = new SubScene(bpInfo, 400, HEIGHT);
+        bp.setRight(sub2);
 
         camera.translateXProperty().set(1000);
         camera.translateYProperty().set(900);
