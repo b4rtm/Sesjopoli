@@ -1,6 +1,7 @@
 package com.example.project_sesjopoli;
 
 import javafx.application.Application;
+import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -15,6 +16,9 @@ public class Game extends Application {
     private static final int WIDTH = 1300;
     private static final int HEIGHT = 650;
 
+    private static final double ROTATION_SPEED = 100;
+    private double mousePosX=0;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -25,7 +29,7 @@ public class Game extends Application {
         ImagePattern imagePattern = new ImagePattern(image);
         board.setFill(imagePattern);
 
-        Group group = new Group();
+        SmartGroup group = new SmartGroup();
         group.getChildren().add(board);
 
         Camera camera = new PerspectiveCamera(true);
@@ -46,6 +50,23 @@ public class Game extends Application {
         camera.setNearClip(1);
         camera.setFarClip(5000);
 
+        group.rotateByX(-20);
+        group.rotateByZ(-50);
+        group.setOnMouseClicked(event -> {
+            Point3D clickPoint = new Point3D(event.getX(), event.getY(), 0);
+            System.out.println("X: " + clickPoint.getX() + "  Y: " + clickPoint.getY());
+        });
+
+        sub.setOnMousePressed(event -> {
+            mousePosX = event.getSceneX();
+        });
+
+        sub.setOnMouseDragged(event -> {
+            double dx = (event.getSceneX() - mousePosX) / sub.getWidth();
+            group.rotateByZ(ROTATION_SPEED*dx);
+            mousePosX = event.getSceneX();
+        });
+
         group.setRotationAxis(Rotate.X_AXIS);
         group.setRotate(-40);
 
@@ -60,4 +81,7 @@ public class Game extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+
+
 }
