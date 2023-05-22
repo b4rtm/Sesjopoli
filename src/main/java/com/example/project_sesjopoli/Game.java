@@ -78,16 +78,21 @@ public class Game extends Application {
         board.setFill(imagePattern);
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        GameController controller = new GameController();
-
+    SmartGroup initBoardGroup() {
         Rectangle board = new Rectangle(BOARD_WIDTH, BOARD_HEIGHT);
         setBoardImage(board);
 
         SmartGroup boardGroup = new SmartGroup();
         boardGroup.getChildren().add(board);
         setDefaultBoardPosition(boardGroup);
+        return boardGroup;
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        GameController controller = new GameController();
+
+        SmartGroup boardGroup = initBoardGroup();
 
         Camera camera = new CameraFactory().initCamera();
 
