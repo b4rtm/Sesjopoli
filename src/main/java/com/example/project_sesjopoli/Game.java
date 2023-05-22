@@ -13,64 +13,60 @@ import javafx.stage.Stage;
 
 public class Game extends Application {
 
+    private static final int BOARD_WIDTH = 2000;
+    private static final int BOARD_HEIGHT = 2000;
     private static final int WIDTH = 1300;
     private static final int HEIGHT = 650;
-
     private static final double ROTATION_SPEED = 100;
-    private double mousePosX=0;
+    private double mousePosX = 0;
+
+    void setMouseEvents(SubScene scene,SmartGroup group){
+        scene.setOnMousePressed(event -> {
+            mousePosX = event.getSceneX();
+        });
+
+        scene.setOnMouseDragged(event -> {
+            double dx = (event.getSceneX() - mousePosX) / scene.getWidth();
+            group.rotateByZ(ROTATION_SPEED * dx);
+            mousePosX = event.getSceneX();
+        });
+
+    }
+    void setDefaultBoardPosition(SmartGroup group){
+        group.rotateByX(-20);
+        group.rotateByZ(-50);
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        Rectangle board = new Rectangle(2000, 2000);
-        BorderPane bp = new BorderPane();
+        Rectangle board = new Rectangle(BOARD_WIDTH, BOARD_HEIGHT);
+        BorderPane wholeScreen = new BorderPane();
 
-        Image image = new Image(getClass().getResourceAsStream("/planszav5.png"));
+        Camera camera = new CameraFactory().initCamera();
+
+        Image image = new Image(getClass().getResourceAsStream("/board.png"));
         ImagePattern imagePattern = new ImagePattern(image);
         board.setFill(imagePattern);
 
-        SmartGroup group = new SmartGroup();
-        group.getChildren().add(board);
+        SmartGroup boardGroup = new SmartGroup();
+        boardGroup.getChildren().add(board);
 
-        Camera camera = new PerspectiveCamera(true);
+        SubScene mainScene = new SubScene(boardGroup, WIDTH - 400, HEIGHT);
+        mainScene.setCamera(camera);
+        mainScene.setFill(Color.rgb(121, 9, 15));
+        wholeScreen.setLeft(mainScene);
 
-        SubScene sub = new SubScene(group, WIDTH - 400, HEIGHT);
-        sub.setCamera(camera);
-        sub.setFill(Color.rgb(121, 9, 15));
-        bp.setLeft(sub);
+        BorderPane sideScreen = new BorderPane();
+        SubScene sideScene = new SubScene(sideScreen, 400, HEIGHT);
+        sideScene.setFill(Color.rgb(121, 9, 15));
+        wholeScreen.setRight(sideScene);
 
-        BorderPane bpInfo = new BorderPane();
-        SubScene sub2 = new SubScene(bpInfo, 400, HEIGHT);
-        sub2.setFill(Color.rgb(121, 9, 15));
-        bp.setRight(sub2);
+        setMouseEvents(mainScene,boardGroup);
 
-        camera.translateXProperty().set(1000);
-        camera.translateYProperty().set(900);
-        camera.translateZProperty().set(-4100);
-        camera.setNearClip(1);
-        camera.setFarClip(5000);
+        setDefaultBoardPosition(boardGroup);
 
-        group.rotateByX(-20);
-        group.rotateByZ(-50);
-        group.setOnMouseClicked(event -> {
-            Point3D clickPoint = new Point3D(event.getX(), event.getY(), 0);
-            System.out.println("X: " + clickPoint.getX() + "  Y: " + clickPoint.getY());
-        });
-
-        sub.setOnMousePressed(event -> {
-            mousePosX = event.getSceneX();
-        });
-
-        sub.setOnMouseDragged(event -> {
-            double dx = (event.getSceneX() - mousePosX) / sub.getWidth();
-            group.rotateByZ(ROTATION_SPEED*dx);
-            mousePosX = event.getSceneX();
-        });
-
-        group.setRotationAxis(Rotate.X_AXIS);
-        group.setRotate(-40);
-
-        Scene scene = new Scene(bp, WIDTH, HEIGHT);
+        Scene scene = new Scene(wholeScreen, WIDTH, HEIGHT);
 
         primaryStage.setTitle("SESJOPOLI");
         primaryStage.setScene(scene);
@@ -81,7 +77,4 @@ public class Game extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
-
-
 }
