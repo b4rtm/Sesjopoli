@@ -36,12 +36,12 @@ public class Game extends Application {
 
         SubScene sub = new SubScene(group, WIDTH - 400, HEIGHT);
         sub.setCamera(camera);
-        sub.setFill(Color.rgb(175, 255, 112));
+        sub.setFill(Color.rgb(121, 9, 15));
         bp.setLeft(sub);
 
         BorderPane bpInfo = new BorderPane();
-        bpInfo.setStyle("-fx-background-color: rgb(175, 125, 112);");
         SubScene sub2 = new SubScene(bpInfo, 400, HEIGHT);
+        sub2.setFill(Color.rgb(121, 9, 15));
         bp.setRight(sub2);
 
         camera.translateXProperty().set(1000);
