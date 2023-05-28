@@ -62,8 +62,7 @@ public class Game extends Application {
 
     }
     void setDefaultBoardPosition(SmartGroup group){
-        group.rotateByX(-20);
-        group.rotateByZ(-50);
+        group.rotateByX(-40);
     }
 
     void initPrimaryStage(Stage primaryStage, Scene scene){

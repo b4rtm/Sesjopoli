@@ -5,8 +5,8 @@ import javafx.scene.PerspectiveCamera;
 
 public class CameraFactory {
 
-    int X = 1000;
-    int Y = 900;
+    int X = 1030;
+    int Y = 1000;
     int Z = -4100;
     int nearClipValue = 1;
     int farClipValue = 10000;
