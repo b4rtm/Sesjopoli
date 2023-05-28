@@ -8,6 +8,7 @@ import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -29,6 +30,17 @@ public class Game extends Application {
     private static final double ROTATION_SPEED = 100;
     private double mousePosX = 0;
 
+    public static final double MAX_DISTANCE = 1840.0;
+    public static final double MIN_DISTANCE = -1120.0;
+
+    boolean checkDistances(double movement, SmartGroup group){
+        if (group.getTranslateZ() >= MAX_DISTANCE && movement < 0
+                || group.getTranslateZ() <= MIN_DISTANCE && movement > 0){
+            return true;
+        }
+        return false;
+    }
+
     void setMouseEvents(SubScene scene,SmartGroup group){
         scene.setOnMousePressed(event -> {
             mousePosX = event.getSceneX();
@@ -38,6 +50,14 @@ public class Game extends Application {
             double dx = (event.getSceneX() - mousePosX) / scene.getWidth();
             group.rotateByZ(ROTATION_SPEED * dx);
             mousePosX = event.getSceneX();
+        });
+
+        scene.addEventHandler(ScrollEvent.SCROLL, scrollEvent -> {
+            if (checkDistances(scrollEvent.getDeltaY(),group)){
+                return;
+            }
+            group.translateZProperty().set(group.getTranslateZ() + (-3) * scrollEvent.getDeltaY());
+
         });
 
     }

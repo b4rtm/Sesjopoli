@@ -9,7 +9,7 @@ public class CameraFactory {
     int Y = 900;
     int Z = -4100;
     int nearClipValue = 1;
-    int farClipValue = 6000;
+    int farClipValue = 10000;
 
     Camera initCamera(){
         Camera camera = new PerspectiveCamera(true);
