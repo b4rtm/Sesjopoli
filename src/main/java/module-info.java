@@ -2,6 +2,7 @@ module com.example.project_sesjopoli {
     requires javafx.controls;
     requires javafx.fxml;
     requires com.google.gson;
+    requires java.net.http;
 
 
     opens com.example.project_sesjopoli to javafx.fxml;

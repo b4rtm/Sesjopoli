@@ -87,11 +87,15 @@ public class Game extends Application {
         return sideScene;
     }
 
-    void initComunicationThread(GameController controller, SideScreen sideScreen, ArrayList<Pawn> pawns, Board board) {
+    void initThreads(GameController controller, SideScreen sideScreen, ArrayList<Pawn> pawns, Board board) {
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(3);
         executorService.scheduleAtFixedRate(() -> {
             controller.getTurnFromServer(sideScreen);
         }, 0, 500, TimeUnit.MILLISECONDS);
+
+        executorService.scheduleAtFixedRate(() -> {
+            controller.getPlayersPositionsFromServer(pawns);
+        }, 0, 300, TimeUnit.MILLISECONDS);
 
         executorService.scheduleAtFixedRate(() -> {
             drawPawns(pawns, board);
@@ -161,7 +165,7 @@ public class Game extends Application {
         wholeScreen.setLeft(mainScene);
         wholeScreen.setRight(sideScene);
 
-        initComunicationThread(controller, sideScreen, pawns, board);
+        initThreads(controller, sideScreen, pawns, board);
 
         Scene scene = new Scene(wholeScreen, WIDTH, HEIGHT);
         initPrimaryStage(primaryStage, scene, controller.getPlayerId());
