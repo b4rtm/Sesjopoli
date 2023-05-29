@@ -4,6 +4,7 @@ import com.example.project_sesjopoli.game_objects.Board;
 import com.example.project_sesjopoli.game_objects.Field;
 import com.example.project_sesjopoli.game_objects.Pawn;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.*;
 import javafx.scene.image.Image;
@@ -95,7 +96,7 @@ public class Game extends Application {
 
         executorService.scheduleAtFixedRate(() -> {
             controller.getPlayersPositionsFromServer(pawns);
-        }, 0, 300, TimeUnit.MILLISECONDS);
+        }, 0, 500, TimeUnit.MILLISECONDS);
 
         executorService.scheduleAtFixedRate(() -> {
             drawPawns(pawns, board);
@@ -137,12 +138,14 @@ public class Game extends Application {
     }
 
     public void drawPawns(ArrayList<Pawn> pawns, Board board){
-        for (int i = 0; i < pawns.size(); ++i){
-            Field actualField = board.getFields().get(pawns.get(i).getPosition());
-            Point2D cords = actualField.getPlace(pawns.get(i).getPlayerId());
-            pawns.get(i).setTranslateX(cords.getX());
-            pawns.get(i).setTranslateY(cords.getY());
-        }
+        Platform.runLater(() -> {
+            for (int i = 0; i < pawns.size(); ++i){
+                Field actualField = board.getFields().get(pawns.get(i).getPosition());
+                Point2D cords = actualField.getPlace(pawns.get(i).getPlayerId());
+                pawns.get(i).setTranslateX(cords.getX());
+                pawns.get(i).setTranslateY(cords.getY());
+            }
+        });
     }
 
     @Override
