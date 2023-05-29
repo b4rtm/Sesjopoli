@@ -8,20 +8,23 @@ import javafx.scene.shape.Box;
 import java.util.ArrayList;
 
 public class Pawn extends Box {
+    public static final double HEIGHT_MULTIPLIER = 0.5;
+    public static final int START_POSITION = 0;
     private int playerId;
     private Point2D cords;
     private int position;
     private Field actualField;
-    private ArrayList<Field> fields = new ArrayList<Field>();
+    private ArrayList<Field> fields;
+    
 
     public Pawn(Board board, int w, int d, int h, int id) {
         super(w,d,h);
-        this.setTranslateZ(-h * 0.5);
+        this.setTranslateZ(-h * HEIGHT_MULTIPLIER);
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseColor(Color.RED);
         this.setMaterial(material);
         playerId = id;
-        position = 0;
+        position = START_POSITION;
         fields = board.getFields();
         actualField = fields.get(position);
         cords = actualField.getPlace(playerId);

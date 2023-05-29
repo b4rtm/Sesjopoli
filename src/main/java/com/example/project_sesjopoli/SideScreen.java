@@ -10,16 +10,17 @@ import javafx.scene.text.Font;
 
 public class SideScreen extends BorderPane {
 
+    public static final int FONT_SIZE = 18;
     Label testLabel;
     Button endTurnButton;
 
     SideScreen(GameController controller){
         super();
         testLabel = new Label();
-        testLabel.setFont(new Font(18));
+        testLabel.setFont(new Font(FONT_SIZE));
         testLabel.setTextFill(Color.WHITE);
         endTurnButton = new Button("Zakończ turę");
-        endTurnButton.setFont(new Font(18));
+        endTurnButton.setFont(new Font(FONT_SIZE));
         EventHandler<ActionEvent> endTurnEvent = e -> {
             controller.endTurn(testLabel);
         };

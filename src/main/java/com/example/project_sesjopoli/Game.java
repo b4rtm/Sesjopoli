@@ -23,11 +23,14 @@ import java.util.concurrent.TimeUnit;
 
 public class Game extends Application {
 
-    private static final int BOARD_WIDTH = 2000;
-    private static final int BOARD_HEIGHT = 2000;
-    private static final int WIDTH = 1300;
-    private static final int HEIGHT = 650;
-    private static final double ROTATION_SPEED = 100;
+    public static final int BOARD_WIDTH = 2000;
+    public static final int BOARD_HEIGHT = 2000;
+    public static final int WIDTH = 1300;
+    public static final int HEIGHT = 650;
+    public static final double ROTATION_SPEED = 100;
+    public static final int SCROLL_SPEED_MULTIPLIER = -3;
+    public static final int DEFAULT_BOARD_ANGLE = -40;
+    public static final int SIDE_SCENE_WIDTH = 400;
     private double mousePosX = 0;
 
     public static final double MAX_DISTANCE = 1840.0;
@@ -56,13 +59,13 @@ public class Game extends Application {
             if (checkDistances(scrollEvent.getDeltaY(),group)){
                 return;
             }
-            group.translateZProperty().set(group.getTranslateZ() + (-3) * scrollEvent.getDeltaY());
+            group.translateZProperty().set(group.getTranslateZ() + SCROLL_SPEED_MULTIPLIER * scrollEvent.getDeltaY());
 
         });
 
     }
     void setDefaultBoardPosition(SmartGroup group){
-        group.rotateByX(-40);
+        group.rotateByX(DEFAULT_BOARD_ANGLE);
     }
 
     void initPrimaryStage(Stage primaryStage, Scene scene){
@@ -76,13 +79,13 @@ public class Game extends Application {
     }
 
     SubScene initMainScene(Camera camera, SmartGroup boardGroup) {
-        SubScene mainScene = new SubScene(boardGroup, WIDTH - 400, HEIGHT);
+        SubScene mainScene = new SubScene(boardGroup, WIDTH - SIDE_SCENE_WIDTH, HEIGHT);
         mainScene.setCamera(camera);
         mainScene.setFill(Color.rgb(121, 9, 15));
         return mainScene;
     }
     SubScene initSideScene(SideScreen sideScreen) {
-        SubScene sideScene = new SubScene(sideScreen, 400, HEIGHT);
+        SubScene sideScene = new SubScene(sideScreen, SIDE_SCENE_WIDTH, HEIGHT);
         return sideScene;
     }
 

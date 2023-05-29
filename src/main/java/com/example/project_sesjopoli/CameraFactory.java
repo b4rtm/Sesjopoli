@@ -5,19 +5,19 @@ import javafx.scene.PerspectiveCamera;
 
 public class CameraFactory {
 
-    int X = 1030;
-    int Y = 1000;
-    int Z = -4100;
-    int nearClipValue = 1;
-    int farClipValue = 10000;
+    public static final int X = 1030;
+    public static final int Y = 1000;
+    public static final int Z = -4100;
+    public static final int NEAR_CLIP_VALUE = 1;
+    public static final int FAR_CLIP_VALUE = 10000;
 
     Camera initCamera(){
         Camera camera = new PerspectiveCamera(true);
         camera.translateXProperty().set(X);
         camera.translateYProperty().set(Y);
         camera.translateZProperty().set(Z);
-        camera.setNearClip(nearClipValue);
-        camera.setFarClip(farClipValue);
+        camera.setNearClip(NEAR_CLIP_VALUE);
+        camera.setFarClip(FAR_CLIP_VALUE);
         return camera;
     }
 }
