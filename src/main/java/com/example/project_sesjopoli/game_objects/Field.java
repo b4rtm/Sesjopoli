@@ -12,7 +12,7 @@ public class Field {
     private ArrayList<Point2D> positions = new ArrayList<>();
     private String name;
 
-    public Field(int x, int y, int width, int height, String name) {
+    public Field(int x, int y, String name) {
         this.name = name;
         positions.add(new Point2D(x+ X_ADD_LEFT,y+Y_ADD_DOWN));
         positions.add(new Point2D(x+X_ADD_LEFT,y+Y_ADD_UP));

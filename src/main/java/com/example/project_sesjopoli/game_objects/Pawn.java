@@ -9,12 +9,10 @@ import java.util.ArrayList;
 
 public class Pawn extends Box {
     public static final double HEIGHT_MULTIPLIER = 0.5;
-    public static final int START_POSITION = 0;
     private int playerId;
     private Point2D cords;
     private int position;
     private Field actualField;
-    private ArrayList<Field> fields;
     
 
     public Pawn(Board board, int w, int d, int h, int id) {
@@ -24,9 +22,8 @@ public class Pawn extends Box {
         material.setDiffuseColor(Color.RED);
         this.setMaterial(material);
         playerId = id;
-        position = START_POSITION;
-        fields = board.getFields();
-        actualField = fields.get(position);
+        position = 0;
+        actualField = board.getFields().get(position);
         cords = actualField.getPlace(playerId);
     }
 
@@ -44,9 +41,5 @@ public class Pawn extends Box {
 
     public int getPlayerId() {
         return playerId;
-    }
-
-    public ArrayList<Field> getFields() {
-        return fields;
     }
 }
