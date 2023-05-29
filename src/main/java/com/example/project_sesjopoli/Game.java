@@ -1,22 +1,20 @@
 package com.example.project_sesjopoli;
 
+import com.example.project_sesjopoli.game_objects.Board;
+import com.example.project_sesjopoli.game_objects.Field;
+import com.example.project_sesjopoli.game_objects.Pawn;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Point3D;
+import javafx.geometry.Point2D;
 import javafx.scene.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -68,18 +66,18 @@ public class Game extends Application {
         group.rotateByX(DEFAULT_BOARD_ANGLE);
     }
 
-    void initPrimaryStage(Stage primaryStage, Scene scene){
+    void initPrimaryStage(Stage primaryStage, Scene scene, int playerId){
         primaryStage.setOnCloseRequest(event -> {
             System.exit(0);
         });
-        primaryStage.setTitle("SESJOPOLI");
+        primaryStage.setTitle("SESJOPOLI - " + playerId);
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setResizable(false);
     }
 
     SubScene initMainScene(Camera camera, SmartGroup boardGroup) {
-        SubScene mainScene = new SubScene(boardGroup, WIDTH - SIDE_SCENE_WIDTH, HEIGHT);
+        SubScene mainScene = new SubScene(boardGroup, WIDTH - 400, HEIGHT,true,SceneAntialiasing.BALANCED);
         mainScene.setCamera(camera);
         mainScene.setFill(Color.rgb(121, 9, 15));
         return mainScene;
@@ -89,9 +87,15 @@ public class Game extends Application {
         return sideScene;
     }
 
-    void initComunicationThread(GameController controller, SideScreen sideScreen) {
-        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(() -> controller.getTurn(sideScreen.getTestLabel()), 0, 1, TimeUnit.SECONDS);
+    void initComunicationThread(GameController controller, SideScreen sideScreen, ArrayList<Pawn> pawns, Board board) {
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(3);
+        executorService.scheduleAtFixedRate(() -> {
+            controller.getTurnFromServer(sideScreen);
+        }, 0, 500, TimeUnit.MILLISECONDS);
+
+        executorService.scheduleAtFixedRate(() -> {
+            drawPawns(pawns, board);
+        }, 0, 50, TimeUnit.MILLISECONDS);
     }
 
     void setBoardImage(Rectangle board){
@@ -110,16 +114,45 @@ public class Game extends Application {
         return boardGroup;
     }
 
+    private static ArrayList<Pawn> initPawns(SmartGroup boardGroup, Board board) {
+        Pawn pawn1 = new Pawn(board, 60,60,80, 1);
+        boardGroup.getChildren().add(pawn1);
+        Pawn pawn2 = new Pawn(board, 60,60,80, 2);
+        boardGroup.getChildren().add(pawn2);
+        Pawn pawn3 = new Pawn(board, 60,60,80, 3);
+        boardGroup.getChildren().add(pawn3);
+        Pawn pawn4 = new Pawn(board, 60,60,80, 4);
+        boardGroup.getChildren().add(pawn4);
+
+        ArrayList<Pawn> pawns =new ArrayList<Pawn>();
+        pawns.add(pawn1);
+        pawns.add(pawn2);
+        pawns.add(pawn3);
+        pawns.add(pawn4);
+        return pawns;
+    }
+
+    public void drawPawns(ArrayList<Pawn> pawns, Board board){
+        for (int i = 0; i < pawns.size(); ++i){
+            Field actualField = board.getFields().get(pawns.get(i).getPosition());
+            Point2D cords = actualField.getPlace(pawns.get(i).getPlayerId());
+            pawns.get(i).setTranslateX(cords.getX());
+            pawns.get(i).setTranslateY(cords.getY());
+        }
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         GameController controller = new GameController();
 
         SmartGroup boardGroup = initBoardGroup();
+        Board board = new Board();
+        ArrayList<Pawn> pawns = initPawns(boardGroup, board);
 
         Camera camera = new CameraFactory().initCamera();
 
         BorderPane wholeScreen = new BorderPane();
-        SideScreen sideScreen = new SideScreen(controller);
+        SideScreen sideScreen = new SideScreen(controller, pawns.get(controller.getPlayerId() - 1), board);
         SubScene mainScene = initMainScene(camera, boardGroup);
         SubScene sideScene = initSideScene(sideScreen);
 
@@ -128,10 +161,10 @@ public class Game extends Application {
         wholeScreen.setLeft(mainScene);
         wholeScreen.setRight(sideScene);
 
-        initComunicationThread(controller, sideScreen);
+        initComunicationThread(controller, sideScreen, pawns, board);
 
         Scene scene = new Scene(wholeScreen, WIDTH, HEIGHT);
-        initPrimaryStage(primaryStage, scene);
+        initPrimaryStage(primaryStage, scene, controller.getPlayerId());
     }
 
     public static void main(String[] args) {

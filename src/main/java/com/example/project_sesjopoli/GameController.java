@@ -13,7 +13,35 @@ import java.net.URL;
 
 public class GameController {
 
-    public void endTurn(Label l) {
+    private int playerId;
+    private int turn;
+
+    GameController() {
+        try {
+            String endpointUrl = "http://26.117.220.171:8080/getplayerid";
+            URL url = new URL(endpointUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            Type collectionType = new TypeToken<Integer>() {
+            }.getType();
+            Gson gson = new Gson();
+            playerId = gson.fromJson(reader, collectionType);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println(ex.getMessage());
+            playerId = -1;
+        }
+    }
+
+    public int getPlayerId() {
+        return playerId;
+    }
+    public int getTurnFromServer() {
+        return turn;
+    }
+
+    public void endTurnOnServer() {
         try {
             String endpointUrl = "http://localhost:8080/endturn";
             URL url = new URL(endpointUrl);
@@ -26,7 +54,7 @@ public class GameController {
         }
     }
 
-    public void getTurn(Label l) {
+    public void getTurnFromServer(SideScreen s) {
         Runnable requestTask = new Runnable() {
             @Override
             public void run() {
@@ -41,10 +69,14 @@ public class GameController {
                     Gson gson = new Gson();
                     int x = gson.fromJson(reader2, collectionType);
 
-                    Platform.runLater(() -> {
-                        l.setText("Tura gracza: " + x);
-                    });
                     connection2.disconnect();
+                    turn = x;
+
+                    if (x == playerId) {
+                        turnOnButtons(s);
+                    } else {
+                        turnOffButtons(s);
+                    }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     System.out.println(ex.getMessage());
@@ -54,5 +86,19 @@ public class GameController {
 
         Thread requestThread = new Thread(requestTask);
         requestThread.start();
+    }
+
+    private void turnOnButtons(SideScreen s) {
+        Platform.runLater(() -> {
+            s.getIsYourTurnLabel().setText("TWOJA TURA");
+            s.getEndTurnButton().setDisable(false);
+        });
+    }
+
+    private void turnOffButtons(SideScreen s) {
+        Platform.runLater(() -> {
+            s.getIsYourTurnLabel().setText("NIE TWOJA TURA");
+            s.getEndTurnButton().setDisable(true);
+        });
     }
 }
