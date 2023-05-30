@@ -175,8 +175,12 @@ public class Game extends Application {
 
         initThreads(controller, sideScreen, pawns, board);
 
-        Scene scene = new Scene(wholeScreen, WIDTH, HEIGHT);
-        initPrimaryStage(primaryStage, scene, controller.getPlayerId());
+        Scene gameScene = new Scene(wholeScreen, WIDTH, HEIGHT);
+
+        Menu menuLayout = new Menu(primaryStage, gameScene);
+        Scene menuScene = new Scene(menuLayout, WIDTH, HEIGHT);
+
+        initPrimaryStage(primaryStage, menuScene, controller.getPlayerId());
     }
 
     public static void main(String[] args) {
