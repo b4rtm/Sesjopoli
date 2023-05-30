@@ -3,6 +3,7 @@ module com.example.project_sesjopoli {
     requires javafx.fxml;
     requires com.google.gson;
     requires java.net.http;
+    requires spring.web;
 
 
     opens com.example.project_sesjopoli to javafx.fxml;

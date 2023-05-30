@@ -30,6 +30,7 @@ public class Game extends Application {
     public static final int SCROLL_SPEED_MULTIPLIER = -3;
     public static final int DEFAULT_BOARD_ANGLE = -40;
     public static final int SIDE_SCENE_WIDTH = 400;
+    public static final int MAX_PLAYERS_IN_GAME = 4;
     private double mousePosX = 0;
 
     public static final double MAX_DISTANCE = 1840.0;
@@ -89,9 +90,13 @@ public class Game extends Application {
     }
 
     void initThreads(GameController controller, SideScreen sideScreen, ArrayList<Pawn> pawns, Board board) {
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(3);
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(MAX_PLAYERS_IN_GAME);
         executorService.scheduleAtFixedRate(() -> {
             controller.getTurnFromServer(sideScreen);
+        }, 0, 500, TimeUnit.MILLISECONDS);
+
+        executorService.scheduleAtFixedRate(() -> {
+            controller.checkHouse();
         }, 0, 500, TimeUnit.MILLISECONDS);
 
         executorService.scheduleAtFixedRate(() -> {
@@ -120,20 +125,14 @@ public class Game extends Application {
     }
 
     private static ArrayList<Pawn> initPawns(SmartGroup boardGroup, Board board) {
-        Pawn pawn1 = new Pawn(board, 60,60,80, 1);
-        boardGroup.getChildren().add(pawn1);
-        Pawn pawn2 = new Pawn(board, 60,60,80, 2);
-        boardGroup.getChildren().add(pawn2);
-        Pawn pawn3 = new Pawn(board, 60,60,80, 3);
-        boardGroup.getChildren().add(pawn3);
-        Pawn pawn4 = new Pawn(board, 60,60,80, 4);
-        boardGroup.getChildren().add(pawn4);
 
-        ArrayList<Pawn> pawns =new ArrayList<Pawn>();
-        pawns.add(pawn1);
-        pawns.add(pawn2);
-        pawns.add(pawn3);
-        pawns.add(pawn4);
+        ArrayList<Pawn> pawns = new ArrayList<>();
+        for(int pawnIterator = 1; pawnIterator<= MAX_PLAYERS_IN_GAME; pawnIterator++){
+            Pawn pawn = new Pawn(board, pawnIterator);
+            pawns.add(pawn);
+            boardGroup.getChildren().add(pawn);
+        }
+
         return pawns;
     }
 
@@ -150,11 +149,14 @@ public class Game extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        GameController controller = new GameController();
+
 
         SmartGroup boardGroup = initBoardGroup();
         Board board = new Board();
         ArrayList<Pawn> pawns = initPawns(boardGroup, board);
+        board.setPawns(pawns);
+
+        GameController controller = new GameController(boardGroup, board);
 
         Camera camera = new CameraFactory().initCamera();
 
@@ -162,6 +164,9 @@ public class Game extends Application {
         SideScreen sideScreen = new SideScreen(controller, pawns.get(controller.getPlayerId() - 1), board);
         SubScene mainScene = initMainScene(camera, boardGroup);
         SubScene sideScene = initSideScene(sideScreen);
+
+        controller.setSideScreen(sideScreen);
+
 
         setMouseEvents(mainScene,boardGroup);
 
