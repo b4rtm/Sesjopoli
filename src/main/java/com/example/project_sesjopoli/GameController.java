@@ -1,9 +1,6 @@
 package com.example.project_sesjopoli;
 
-import com.example.project_sesjopoli.game_objects.Board;
-import com.example.project_sesjopoli.game_objects.Field;
-import com.example.project_sesjopoli.game_objects.Pawn;
-import com.example.project_sesjopoli.game_objects.SubjectField;
+import com.example.project_sesjopoli.game_objects.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
@@ -197,16 +194,12 @@ public class GameController {
                     if(owner == null && receivedFieldNumber != 0){ // jesli pole nie ma wlasciciela to wtedy następuje kupno pola
                         Platform.runLater(() -> {
 
-                            Box box = new Box(150, 150, 100);
-                            box.setTranslateZ(-100 * 0.5);
-                            PhongMaterial material = new PhongMaterial();
-                            material.setDiffuseColor(Color.BLUE);
-                            box.setMaterial(material);
-                            boardGroup.getChildren().add(box);
+                            House house = new House();
+                            boardGroup.getChildren().add(house);
                             Field actualField = board.getFields().get(receivedFieldNumber);
                             Point2D cords = actualField.getPlace(receivedPlayerID+1); //todo gdzie ma stanąć domek
-                            box.setTranslateX(cords.getX());
-                            box.setTranslateY(cords.getY());
+                            house.setTranslateX(cords.getX());
+                            house.setTranslateY(cords.getY());
 
 
                             SubjectField field = (SubjectField) board.getFields().get(receivedFieldNumber);   //zakup
