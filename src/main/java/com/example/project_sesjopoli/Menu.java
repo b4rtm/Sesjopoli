@@ -1,5 +1,6 @@
 package com.example.project_sesjopoli;
 
+import com.example.project_sesjopoli.post_objects.PostObjectForSettingName;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -12,26 +13,29 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
 public class Menu extends AnchorPane {
 
+    public String LINK = "http://localhost:8080";
     private Label info;
     private Label error;
     private Button playButton;
     private Button exitButton;
     private TextField nameInput;
+    private final int playerId;
 
-    Menu(Stage primaryStage, Scene gameScene) throws IOException {
+    Menu(Stage primaryStage, Scene gameScene, int id) throws IOException {
         this.setStyle("-fx-background-color: rgb(121, 9, 15)");
         initInfo();
         initError();
         initNameInput();
         initPlayButton(primaryStage, gameScene);
         initExitButton(primaryStage);
-
         insertAllIntoPane();
+        this.playerId = id;
     }
 
     private void insertAllIntoPane() {
@@ -66,6 +70,7 @@ public class Menu extends AnchorPane {
                 error.setText("Nie wpisałeś imienia !!!");
             }
             else{
+                sendNameToServer();
                 primaryStage.setScene(gameScene);
             }
         };
@@ -98,5 +103,10 @@ public class Menu extends AnchorPane {
         info.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-padding: 10px 60px; -fx-border-width: 6px;");
         info.setLayoutX(385);
         info.setLayoutY(40);
+    }
+    private void sendNameToServer(){
+        RestTemplate restTemplate = new RestTemplate();
+        PostObjectForSettingName dataRequest = new PostObjectForSettingName(playerId,nameInput.getText());
+        String responseEntity = restTemplate.postForObject(LINK + "/name", dataRequest, String.class);
     }
 }

@@ -6,22 +6,20 @@ import com.example.project_sesjopoli.game_objects.SubjectField;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class SideScreen extends AnchorPane {
 
     public static final int FONT_SIZE = 18;
+    private static final int INITIAL_ECTS = 30;
     Board board;
     Label isYourTurnLabel;
     Label infoLabel;
@@ -32,10 +30,12 @@ public class SideScreen extends AnchorPane {
     Button doNotBuyHouse;
     GridPane buyHousePane;
     GridPane moneyPane;
+    ArrayList<Label> moneyInfoLabel;
 
     SideScreen(GameController controller, Pawn pawn, Board board){
         super();
         this.board=board;
+        this.moneyInfoLabel=new ArrayList<>();
         initLabelsAndButtons();
         assignEventHandlers(controller, pawn, board);
 
@@ -53,13 +53,13 @@ public class SideScreen extends AnchorPane {
         };
         EventHandler<ActionEvent> movePawnEvent = e -> {
             if(controller.getTurn()== pawn.getPlayerId()){
-                int random = new Random().nextInt(6) + 1;
+                int random = /*new Random().nextInt(6) +*/ 1;
                 int randomPosition = pawn.getPosition()+random;
                 infoLabel.setText("Wylosowano: " + random + "\nPole: " + board.getFields().get(randomPosition).getName());
                 movePawnButton.setDisable(true);
 
                 if(board.getFields().get(randomPosition) instanceof SubjectField){
-                    if(((SubjectField) board.getFields().get(randomPosition)).getOwner() == null){ // nikt nie ma tego pola
+                    if (!controller.getPositionsWithHouses().contains(randomPosition)) { // nikt nie ma tego pola
                         buyHousePane.setVisible(true);
                     }
                 }
@@ -130,13 +130,18 @@ public class SideScreen extends AnchorPane {
 
         int rowIterator=0;
         for(Pawn pawn: board.getPawns()){
-            Label label = new Label("gracz " + pawn.getPlayerId() + " ma " + pawn.getEctsPoints() + "ects");
-            label.setFont(new Font(18));
+            Label label = new Label("gracz " + pawn.getPlayerId() + " ma " + INITIAL_ECTS + "ects");
+            label.setFont(new Font(FONT_SIZE));
             label.setTextFill(Color.WHITE);
+            moneyInfoLabel.add(label);
             moneyPane.add(label,0,rowIterator++);
         }
         this.getChildren().add(moneyPane);
 
+    }
+
+    public void setTextInMoneyPane(int id, int money, String name) {
+        moneyInfoLabel.get(id).setText(name + " ma " + money + "ects");
     }
 
     private void initMoneyPane() {

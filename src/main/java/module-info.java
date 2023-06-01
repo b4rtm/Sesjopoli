@@ -8,4 +8,6 @@ module com.example.project_sesjopoli {
 
     opens com.example.project_sesjopoli to javafx.fxml;
     exports com.example.project_sesjopoli;
+    exports com.example.project_sesjopoli.post_objects;
+    opens com.example.project_sesjopoli.post_objects to javafx.fxml;
 }

@@ -96,16 +96,12 @@ public class Game extends Application {
         }, 0, 500, TimeUnit.MILLISECONDS);
 
         executorService.scheduleAtFixedRate(() -> {
-            controller.checkHouse();
+            controller.handleGameState();
         }, 0, 500, TimeUnit.MILLISECONDS);
 
         executorService.scheduleAtFixedRate(() -> {
-            controller.getPlayersPositionsFromServer(pawns);
-        }, 0, 500, TimeUnit.MILLISECONDS);
-
-        executorService.scheduleAtFixedRate(() -> {
-            drawPawns(pawns, board);
-        }, 0, 50, TimeUnit.MILLISECONDS);
+            drawPawns(board);
+        }, 0, 100, TimeUnit.MILLISECONDS);
     }
 
     void setBoardImage(Rectangle board){
@@ -128,7 +124,7 @@ public class Game extends Application {
 
         ArrayList<Pawn> pawns = new ArrayList<>();
         for(int pawnIterator = 1; pawnIterator<= MAX_PLAYERS_IN_GAME; pawnIterator++){
-            Pawn pawn = new Pawn(board, pawnIterator);
+            Pawn pawn = new Pawn(pawnIterator);
             pawns.add(pawn);
             boardGroup.getChildren().add(pawn);
         }
@@ -136,13 +132,13 @@ public class Game extends Application {
         return pawns;
     }
 
-    public void drawPawns(ArrayList<Pawn> pawns, Board board){
+    public void drawPawns(Board board){
         Platform.runLater(() -> {
-            for (int i = 0; i < pawns.size(); ++i){
-                Field actualField = board.getFields().get(pawns.get(i).getPosition());
-                Point2D cords = actualField.getPlace(pawns.get(i).getPlayerId());
-                pawns.get(i).setTranslateX(cords.getX());
-                pawns.get(i).setTranslateY(cords.getY());
+            for (int i = 0; i < board.getPawns().size(); ++i){
+                Field actualField = board.getFields().get(board.getPawns().get(i).getPosition());
+                Point2D cords = actualField.getPlace(board.getPawns().get(i).getPlayerId());
+                board.getPawns().get(i).setTranslateX(cords.getX());
+                board.getPawns().get(i).setTranslateY(cords.getY());
             }
         });
     }
@@ -177,7 +173,7 @@ public class Game extends Application {
 
         Scene gameScene = new Scene(wholeScreen, WIDTH, HEIGHT);
 
-        Menu menuLayout = new Menu(primaryStage, gameScene);
+        Menu menuLayout = new Menu(primaryStage, gameScene, controller.getPlayerId() - 1);
         Scene menuScene = new Scene(menuLayout, WIDTH, HEIGHT);
 
         initPrimaryStage(primaryStage, menuScene, controller.getPlayerId());

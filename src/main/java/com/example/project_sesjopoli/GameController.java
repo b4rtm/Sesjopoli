@@ -1,9 +1,14 @@
 package com.example.project_sesjopoli;
 
 import com.example.project_sesjopoli.game_objects.*;
+import com.example.project_sesjopoli.post_objects.PostObjectForBuyingHouse;
+import com.example.project_sesjopoli.post_objects.PostObjectForMoving;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
+import javafx.geometry.Point2D;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -15,16 +20,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
-import java.util.List;
-
-import javafx.geometry.Point2D;
-import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.text.Font;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 public class GameController {
 
@@ -35,6 +30,7 @@ public class GameController {
     private Board board;
     private SmartGroup boardGroup;
     private SideScreen sideScreen;
+    private ArrayList<Integer> positionsWithHouses;
 
     GameController(SmartGroup boardGroup, Board board) {
         try {
@@ -49,6 +45,7 @@ public class GameController {
             playerId = gson.fromJson(reader, collectionType);
             this.board = board;
             this.boardGroup = boardGroup;
+            this.positionsWithHouses = new ArrayList<>();
         } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println(ex.getMessage());
@@ -59,60 +56,41 @@ public class GameController {
     public int getPlayerId() {
         return playerId;
     }
+
     public int getTurn() {
         return turn;
     }
 
     public void sendPositionUpdateToServer(int playerId, int field) {
-        try {
-            HttpRequest postRequest = HttpRequest.newBuilder()
-                    .uri(new URI(LINK + "/update"))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString("{\"field\": " + field + ", " + "\"playerId\": " + playerId + "}"))
-                    .build();
-
-            System.out.println("{\"field\": " + field + ", " + "\"playerId\": " + playerId + "}");
-            HttpClient httpClient = HttpClient.newHttpClient();
-            HttpResponse<String> postRes = httpClient.send(postRequest, HttpResponse.BodyHandlers.ofString());
-            System.out.println(postRes.body());
-            moved = true;
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        moved = true;
+        RestTemplate restTemplate = new RestTemplate();
+        PostObjectForMoving dataRequest = new PostObjectForMoving(playerId, field);
+        String responseEntity = restTemplate.postForObject(LINK + "/update", dataRequest, String.class);
+        System.out.println(responseEntity);
     }
 
-    public void getPlayersPositionsFromServer(ArrayList<Pawn> pawns) {
+    public void handleGameState() {
         Runnable requestTask = new Runnable() {
             @Override
             public void run() {
-                try {
-                    String endpointUrl2 = LINK + "/getpositions";
-                    URL url2 = new URL(endpointUrl2);
-                    HttpURLConnection connection2 = (HttpURLConnection) url2.openConnection();
-                    connection2.setRequestMethod("GET");
-                    BufferedReader reader2 = new BufferedReader(new InputStreamReader(connection2.getInputStream()));
-                    Type collectionType = new TypeToken<ArrayList<Integer>>() {
-                    }.getType();
-                    Gson gson = new Gson();
-                    ArrayList<Integer> actualPositions = gson.fromJson(reader2, collectionType);
-                    connection2.disconnect();
+                RestTemplate restTemplate = new RestTemplate();
+                ResponseEntity<GameState> responseEntity = restTemplate.getForEntity(LINK + "/", GameState.class);
+                if (responseEntity.getStatusCode().is2xxSuccessful()) {
 
-                    movePawns(actualPositions, pawns);
+                    GameState current = responseEntity.getBody();
 
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    System.out.println(ex.getMessage());
+                    movePawns(current.playerPositions);
+                    buildHouse(current.positionOwners);
+                    updateMoneyPanel(current.money, current.names);
                 }
             }
         };
-
-
         Thread requestThread = new Thread(requestTask);
         requestThread.start();
     }
 
     public void endTurnOnServer() {
-        moved=false;
+        moved = false;
         try {
             String endpointUrl = LINK + "/endturn";
             URL url = new URL(endpointUrl);
@@ -162,71 +140,17 @@ public class GameController {
 
     public void sendPurchaseInformation(int playerId, int fieldNumber) { //POST
         RestTemplate restTemplate = new RestTemplate();
-        DataResponse dataRequest = new DataResponse(playerId,fieldNumber);
-        try {
-            DataResponse dataResponse = restTemplate.postForObject(LINK + "/house", dataRequest, DataResponse.class);
-        }
-        catch (Exception e){
-            System.out.println("tu jest wszystko dobrze");
-        }
+        PostObjectForBuyingHouse dataRequest = new PostObjectForBuyingHouse(playerId, fieldNumber);
+        String responseEntity = restTemplate.postForObject(LINK + "/house", dataRequest, String.class);
     }
 
-    public void checkHouse() {
-        Runnable requestTask = new Runnable() {
-            @Override
-            public void run() {
-                RestTemplate restTemplate = new RestTemplate();
-                ResponseEntity<DataResponse> responseEntity = restTemplate.getForEntity(LINK + "/house", DataResponse.class);
-                if (responseEntity.getStatusCode().is2xxSuccessful()) {
-
-                    DataResponse dataResponse = responseEntity.getBody();
-                    int receivedPlayerID = dataResponse.getPlayerID();
-                    int receivedFieldNumber = dataResponse.getFieldNumber();
-
-
-                    Pawn owner=null;
-                    Field tempField =  board.getFields().get(receivedFieldNumber);
-                    if(tempField instanceof SubjectField){
-                        SubjectField subjectField = (SubjectField) tempField;
-                        owner = subjectField.getOwner();
-                    }
-
-                    if(owner == null && receivedFieldNumber != 0){ // jesli pole nie ma wlasciciela to wtedy następuje kupno pola
-                        Platform.runLater(() -> {
-
-                            House house = new House();
-                            boardGroup.getChildren().add(house);
-                            Field actualField = board.getFields().get(receivedFieldNumber);
-                            Point2D cords = actualField.getPlace(receivedPlayerID+1); //todo gdzie ma stanąć domek
-                            house.setTranslateX(cords.getX());
-                            house.setTranslateY(cords.getY());
-
-
-                            SubjectField field = (SubjectField) board.getFields().get(receivedFieldNumber);   //zakup
-                            field.buyField(board.getPawns().get(receivedPlayerID));
-
-                            updateMoneyPanel();
-
-                        });
-
-                    }
-
-                    System.out.println("id = " + receivedPlayerID + " num " + receivedFieldNumber);
-                }
-            }
-        };
-
-        Thread requestThread = new Thread(requestTask);
-        requestThread.start();
-    }
-
-    private void updateMoneyPanel() {
-        for(Pawn pawn: board.getPawns()){
-            Label label = (Label) sideScreen.moneyPane.getChildren().get(pawn.getPlayerId()-1);
-            label.setText("gracz " + pawn.getPlayerId() + " ma " + pawn.getEctsPoints() + "ects");
+    private void updateMoneyPanel(ArrayList<Integer> money, ArrayList<String> names) {
+        for (Pawn pawn : board.getPawns()) {
+            Platform.runLater(() -> {
+                sideScreen.setTextInMoneyPane(pawn.getPlayerId() - 1, money.get(pawn.getPlayerId() - 1), names.get(pawn.getPlayerId() - 1));
+            });
         }
     }
-
 
     private void turnOnButtons(SideScreen s) {
         Platform.runLater(() -> {
@@ -244,13 +168,34 @@ public class GameController {
         });
     }
 
-    private void movePawns(ArrayList<Integer> actualPositions, ArrayList<Pawn> pawns) {
-        for (int i = 0; i < pawns.size(); ++i) {
-            if (pawns.get(i).getPosition() < actualPositions.get(i)) pawns.get(i).makeMove();
+    private void movePawns(ArrayList<Integer> actualPositions) {
+        for (int i = 0; i < board.getPawns().size(); ++i) {
+            if (board.getPawns().get(i).getPosition() < actualPositions.get(i)) board.getPawns().get(i).makeMove();
         }
+    }
+
+    private void buildHouse(ArrayList<Integer> positionOwners) {
+        Platform.runLater(() -> {
+            for (int i = 0; i < positionOwners.size(); ++i) {
+                if (positionOwners.get(i) != -1 && !positionsWithHouses.contains(i)) {
+                    System.out.println(positionOwners.get(i));
+                    House house = new House();
+                    boardGroup.getChildren().add(house);
+                    Field actualField = board.getFields().get(i);
+                    Point2D cords = actualField.getPlace(5);
+                    house.setTranslateX(cords.getX());
+                    house.setTranslateY(cords.getY());
+                    positionsWithHouses.add(i);
+                }
+            }
+        });
     }
 
     public void setSideScreen(SideScreen sideScreen) {
         this.sideScreen = sideScreen;
+    }
+
+    public ArrayList<Integer> getPositionsWithHouses() {
+        return positionsWithHouses;
     }
 }
