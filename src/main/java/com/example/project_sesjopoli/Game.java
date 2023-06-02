@@ -90,13 +90,10 @@ public class Game extends Application {
     }
 
     void initThreads(GameController controller, SideScreen sideScreen, ArrayList<Pawn> pawns, Board board) {
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(MAX_PLAYERS_IN_GAME);
-        executorService.scheduleAtFixedRate(() -> {
-            controller.getTurnFromServer(sideScreen);
-        }, 0, 200, TimeUnit.MILLISECONDS);
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
 
         executorService.scheduleAtFixedRate(() -> {
-            controller.handleGameState();
+            controller.handleGameState(sideScreen);
         }, 0, 200, TimeUnit.MILLISECONDS);
 
         executorService.scheduleAtFixedRate(() -> {

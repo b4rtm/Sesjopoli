@@ -8,4 +8,6 @@ public class GameState {
     public ArrayList<Integer> positionOwners;
     public ArrayList<Integer> priceFields;
     public ArrayList<String> names;
+    public int whoseTurn;
+    public int playerId;
 }

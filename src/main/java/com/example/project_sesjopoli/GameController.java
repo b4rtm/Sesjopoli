@@ -25,7 +25,6 @@ public class GameController {
 
     public static final String LINK = "http://localhost:8080";
     private int playerId;
-    private int turn;
     private boolean moved;
     private Board board;
     private SmartGroup boardGroup;
@@ -57,10 +56,6 @@ public class GameController {
         return playerId;
     }
 
-    public int getTurn() {
-        return turn;
-    }
-
     public void sendPositionUpdateToServer(int playerId, int field) {
         moved = true;
         RestTemplate restTemplate = new RestTemplate();
@@ -69,7 +64,7 @@ public class GameController {
         System.out.println(responseEntity);
     }
 
-    public void handleGameState() {
+    public void handleGameState(SideScreen s) {
         Runnable requestTask = new Runnable() {
             @Override
             public void run() {
@@ -79,6 +74,7 @@ public class GameController {
 
                     GameState current = responseEntity.getBody();
 
+                    hideOrShowButtons(current.whoseTurn, s);
                     movePawns(current.playerPositions);
                     buildHouse(current.positionOwners);
                     updateMoneyPanel(current.money, current.names);
@@ -103,40 +99,6 @@ public class GameController {
         }
     }
 
-    public void getTurnFromServer(SideScreen s) {
-        Runnable requestTask = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String endpointUrl2 = LINK + "/getturn";
-                    URL url2 = new URL(endpointUrl2);
-                    HttpURLConnection connection2 = (HttpURLConnection) url2.openConnection();
-                    connection2.setRequestMethod("GET");
-                    BufferedReader reader2 = new BufferedReader(new InputStreamReader(connection2.getInputStream()));
-                    Type collectionType = new TypeToken<Integer>() {
-                    }.getType();
-                    Gson gson = new Gson();
-                    int x = gson.fromJson(reader2, collectionType);
-
-                    connection2.disconnect();
-                    turn = x;
-
-                    if (x == playerId) {
-                        turnOnButtons(s);
-                    } else {
-                        turnOffButtons(s);
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    System.out.println(ex.getMessage());
-                }
-            }
-        };
-
-        Thread requestThread = new Thread(requestTask);
-        requestThread.start();
-    }
-
 
     public void sendPurchaseInformation(int playerId, int fieldNumber) { //POST
         RestTemplate restTemplate = new RestTemplate();
@@ -149,6 +111,14 @@ public class GameController {
             Platform.runLater(() -> {
                 sideScreen.setTextInMoneyPane(pawn.getPlayerId() - 1, money.get(pawn.getPlayerId() - 1), names.get(pawn.getPlayerId() - 1));
             });
+        }
+    }
+
+    private void hideOrShowButtons(int turn, SideScreen s) {
+        if (turn == playerId) {
+            turnOnButtons(s);
+        } else {
+            turnOffButtons(s);
         }
     }
 
@@ -165,6 +135,7 @@ public class GameController {
             s.getIsYourTurnLabel().setText("NIE TWOJA TURA");
             s.getMovePawnButton().setDisable(true);
             s.getEndTurnButton().setDisable(true);
+            s.getBuyHousePane().setVisible(false);
         });
     }
 

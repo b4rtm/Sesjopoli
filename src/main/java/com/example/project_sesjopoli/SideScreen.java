@@ -31,6 +31,7 @@ public class SideScreen extends AnchorPane {
     GridPane buyHousePane;
     GridPane moneyPane;
     ArrayList<Label> moneyInfoLabel;
+    int lastDicedPosition;
 
     SideScreen(GameController controller, Pawn pawn, Board board){
         super();
@@ -52,9 +53,10 @@ public class SideScreen extends AnchorPane {
             controller.endTurnOnServer();
         };
         EventHandler<ActionEvent> movePawnEvent = e -> {
-            if(controller.getTurn()== pawn.getPlayerId()){
+
                 int random = /*new Random().nextInt(6) +*/ 8;
                 int randomPosition = (pawn.getPosition()+random)%24;
+                lastDicedPosition = randomPosition;
                 infoLabel.setText("Wylosowano: " + random + "\nPole: " + board.getFields().get(randomPosition).getName());
                 movePawnButton.setDisable(true);
 
@@ -64,17 +66,17 @@ public class SideScreen extends AnchorPane {
                     }
                 }
                 controller.sendPositionUpdateToServer(pawn.getPlayerId()-1, pawn.getPosition()+random);
-            }
+
         };
         EventHandler<ActionEvent> buyHouseEvent = e -> {
-            if(controller.getTurn()== pawn.getPlayerId()){
+
                 infoLabel.setText("Kupiono przedmiot");
                 movePawnButton.setDisable(true);
                 buyHousePane.setVisible(false);
-                controller.sendPurchaseInformation(pawn.getPlayerId()-1, pawn.getPosition());
+                controller.sendPurchaseInformation(pawn.getPlayerId()-1, lastDicedPosition);
 
 
-            }
+
         };
 
         EventHandler<ActionEvent> doNotBuyHouseEvent = e -> {
@@ -174,5 +176,9 @@ public class SideScreen extends AnchorPane {
         buyHousePane.add(doNotBuyHouse,2,10);
         buyHousePane.setVisible(false);
         this.getChildren().add(buyHousePane);
+    }
+
+    public GridPane getBuyHousePane() {
+        return buyHousePane;
     }
 }
