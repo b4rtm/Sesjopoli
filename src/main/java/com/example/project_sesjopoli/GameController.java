@@ -170,7 +170,7 @@ public class GameController {
 
     private void movePawns(ArrayList<Integer> actualPositions) {
         for (int i = 0; i < board.getPawns().size(); ++i) {
-            if (board.getPawns().get(i).getPosition() < actualPositions.get(i)) board.getPawns().get(i).makeMove();
+            if (board.getPawns().get(i).getPosition() != actualPositions.get(i)) board.getPawns().get(i).makeMove();
         }
     }
 

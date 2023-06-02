@@ -53,8 +53,8 @@ public class SideScreen extends AnchorPane {
         };
         EventHandler<ActionEvent> movePawnEvent = e -> {
             if(controller.getTurn()== pawn.getPlayerId()){
-                int random = /*new Random().nextInt(6) +*/ 1;
-                int randomPosition = pawn.getPosition()+random;
+                int random = /*new Random().nextInt(6) +*/ 8;
+                int randomPosition = (pawn.getPosition()+random)%24;
                 infoLabel.setText("Wylosowano: " + random + "\nPole: " + board.getFields().get(randomPosition).getName());
                 movePawnButton.setDisable(true);
 

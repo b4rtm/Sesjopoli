@@ -93,15 +93,15 @@ public class Game extends Application {
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(MAX_PLAYERS_IN_GAME);
         executorService.scheduleAtFixedRate(() -> {
             controller.getTurnFromServer(sideScreen);
-        }, 0, 500, TimeUnit.MILLISECONDS);
+        }, 0, 200, TimeUnit.MILLISECONDS);
 
         executorService.scheduleAtFixedRate(() -> {
             controller.handleGameState();
-        }, 0, 500, TimeUnit.MILLISECONDS);
+        }, 0, 200, TimeUnit.MILLISECONDS);
 
         executorService.scheduleAtFixedRate(() -> {
             drawPawns(board);
-        }, 0, 100, TimeUnit.MILLISECONDS);
+        }, 0, 50, TimeUnit.MILLISECONDS);
     }
 
     void setBoardImage(Rectangle board){

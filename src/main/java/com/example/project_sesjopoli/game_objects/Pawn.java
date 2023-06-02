@@ -31,6 +31,7 @@ public class Pawn extends Box {
 
     public void makeMove(){
         position++;
+        if(position==24) position=0;
     }
 
     public int getPlayerId() {
