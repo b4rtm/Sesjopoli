@@ -3,6 +3,7 @@ package com.example.project_sesjopoli;
 import com.example.project_sesjopoli.game_objects.Board;
 import com.example.project_sesjopoli.game_objects.Pawn;
 import com.example.project_sesjopoli.game_objects.SubjectField;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -20,6 +21,7 @@ public class SideScreen extends AnchorPane {
 
     public static final int FONT_SIZE = 18;
     private static final int INITIAL_ECTS = 30;
+    private static final int LOOSE_FONT_SIZE = 25;
     Board board;
     Label isYourTurnLabel;
     Label infoLabel;
@@ -143,8 +145,44 @@ public class SideScreen extends AnchorPane {
     }
 
     public void setTextInMoneyPane(int id, int money, String name) {
-        moneyInfoLabel.get(id).setText(name + " ma " + money + "ects");
+        if (money <= 0){
+            moneyInfoLabel.get(id).setText(name + " przegrał!");
+        } else{
+            moneyInfoLabel.get(id).setText(name + " ma " + money + "ects");
+        }
     }
+
+    public void displayLooserInfo(){
+        for (Pawn pawn: board.getPawns()){
+            moneyInfoLabel.get(pawn.getPlayerId() - 1).setVisible(false);
+        }
+        Label looseInfo = new Label("PRZEGRAŁEŚ!");
+        looseInfo.setFont(new Font(LOOSE_FONT_SIZE));
+        looseInfo.setTextFill(Color.WHITE);
+        Platform.runLater(() -> {
+            moneyPane.add(looseInfo, 0, 1);
+        });
+
+    }
+
+    public void displayWinnerInfo(){
+        for (Pawn pawn: board.getPawns()){
+            moneyInfoLabel.get(pawn.getPlayerId() - 1).setVisible(false);
+        }
+        Label winnerInfo = new Label("WYGRAŁEŚ!");
+        winnerInfo.setFont(new Font(LOOSE_FONT_SIZE));
+        winnerInfo.setTextFill(Color.WHITE);
+        Platform.runLater(() -> {
+            moneyPane.add(winnerInfo, 0, 1);
+        });
+
+    }
+
+    public void disableAllButtons(){
+        movePawnButton.setDisable(true);
+        endTurnButton.setDisable(true);
+    }
+
 
     private void initMoneyPane() {
         moneyPane = new GridPane();

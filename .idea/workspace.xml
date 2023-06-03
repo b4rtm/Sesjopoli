@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="2020402a-8095-4faa-946b-d847e994eeb3" name="Changes" comment="Przechodzenie przez start">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameState.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java" afterDir="false" />
@@ -41,19 +40,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;ac9ac5b60bbde4f5ed578e7f638c3bbb&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/Maks/Desktop/zapas/Sesjopoli_serwer",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "spring.configuration.checksum": "ac9ac5b60bbde4f5ed578e7f638c3bbb",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="GRA" type="Application" factoryName="Application" singleton="false">
       <option name="MAIN_CLASS_NAME" value="com.example.project_sesjopoli.Game" />
@@ -100,5 +100,8 @@
     <MESSAGE value="Refaktoryzacja, obsługa imion i kary za wejście na pole innego gracza" />
     <MESSAGE value="Przechodzenie przez start" />
     <option name="LAST_COMMIT_MESSAGE" value="Przechodzenie przez start" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Sesjopoli$GRA.ic" NAME="GRA Coverage Results" MODIFIED="1685722961193" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

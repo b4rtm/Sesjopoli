@@ -20,6 +20,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class GameController {
 
@@ -73,16 +74,28 @@ public class GameController {
                 if (responseEntity.getStatusCode().is2xxSuccessful()) {
 
                     GameState current = responseEntity.getBody();
-
                     hideOrShowButtons(current.whoseTurn, s);
                     movePawns(current.playerPositions);
                     buildHouse(current.positionOwners);
                     updateMoneyPanel(current.money, current.names);
+                    if (current.playerLostFlags.get(playerId - 1)){
+                        sideScreen.displayLooserInfo();
+                    }
+                    if (playerWon(current)){
+                        sideScreen.disableAllButtons();
+                        sideScreen.displayWinnerInfo();
+
+                    }
                 }
             }
         };
         Thread requestThread = new Thread(requestTask);
         requestThread.start();
+    }
+
+    public boolean playerWon(GameState current){
+        return (Collections.frequency(current.playerLostFlags, true) == current.playerId - 1
+                && !current.playerLostFlags.get(playerId - 1) && current.playerId > 1);
     }
 
     public void endTurnOnServer() {
