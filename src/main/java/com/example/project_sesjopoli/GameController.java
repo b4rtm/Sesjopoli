@@ -17,6 +17,7 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.Collections;
 
@@ -28,7 +29,7 @@ public class GameController {
     private Board board;
     private SmartGroup boardGroup;
     private SideScreen sideScreen;
-    private ArrayList<Integer> positionsWithHouses;
+    private HashMap<Integer,House> positionsWithHouses;
 
     GameController(SmartGroup boardGroup, Board board) {
         try {
@@ -43,7 +44,7 @@ public class GameController {
             playerId = gson.fromJson(reader, collectionType);
             this.board = board;
             this.boardGroup = boardGroup;
-            this.positionsWithHouses = new ArrayList<>();
+            this.positionsWithHouses = new HashMap<>();
         } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println(ex.getMessage());
@@ -167,7 +168,7 @@ public class GameController {
     private void buildHouse(ArrayList<Integer> positionOwners) {
         Platform.runLater(() -> {
             for (int i = 0; i < positionOwners.size(); ++i) {
-                if (positionOwners.get(i) != -1 && !positionsWithHouses.contains(i)) {
+                if (positionOwners.get(i) != -1 && !positionsWithHouses.containsKey(i)) {
                     System.out.println(positionOwners.get(i));
                     House house = new House();
                     boardGroup.getChildren().add(house);
@@ -175,7 +176,13 @@ public class GameController {
                     Point2D cords = actualField.getPlace(5);
                     house.setTranslateX(cords.getX());
                     house.setTranslateY(cords.getY());
-                    positionsWithHouses.add(i);
+                    positionsWithHouses.put(i,house);
+                }
+                else if(positionOwners.get(i) == -1 && positionsWithHouses.containsKey(i)){
+                    positionsWithHouses.get(i).setVisible(false);
+                }
+                else if(positionOwners.get(i) != -1 && positionsWithHouses.containsKey(i)){
+                    positionsWithHouses.get(i).setVisible(true);
                 }
             }
         });
@@ -185,7 +192,7 @@ public class GameController {
         this.sideScreen = sideScreen;
     }
 
-    public ArrayList<Integer> getPositionsWithHouses() {
+    public HashMap<Integer, House> getPositionsWithHouses() {
         return positionsWithHouses;
     }
 }

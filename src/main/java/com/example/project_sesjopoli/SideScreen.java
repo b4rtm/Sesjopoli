@@ -83,14 +83,14 @@ public class SideScreen extends AnchorPane {
         };
         EventHandler<ActionEvent> movePawnEvent = e -> {
 
-                int random = /*new Random().nextInt(6) + 1*/ 3;
+                int random = /*new Random().nextInt(6) + 1*/ 8;
                 int randomPosition = (pawn.getPosition()+random)%24;
                 lastDicedPosition = randomPosition;
                 infoLabel.setText("Wylosowano: " + random + "\nPole: " + board.getFields().get(randomPosition).getName());
                 movePawnButton.setDisable(true);
 
                 if(board.getFields().get(randomPosition) instanceof SubjectField){
-                    if (!controller.getPositionsWithHouses().contains(randomPosition)) { // nikt nie ma tego pola
+                    if (!controller.getPositionsWithHouses().containsKey(randomPosition) || !controller.getPositionsWithHouses().get(randomPosition).isVisible()) { // nikt nie ma tego pola
                         buyHousePane.setVisible(true);
                     }
                 }
