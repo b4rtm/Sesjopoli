@@ -20,7 +20,7 @@ public class BoardBuilder {
 
         fields.add(new SubjectField(30,1350, new Point2D(310,1450), "TPI",board));
         fields.add(new SubjectField(30,1090, new Point2D(310,1190), "ALGORYTMY",board));
-        fields.add(new Field(30,830, "MYSTERY BOX",board));
+        fields.add(new QuizField(30,830, "QUIZ",board));
         fields.add(new SubjectField(30,570, new Point2D(310,670), "SW",board));
         fields.add(new SubjectField(30,310, new Point2D(310,410), "AK",board));
 
@@ -35,7 +35,7 @@ public class BoardBuilder {
         fields.add(new Field(1650,-40, "INNOWACJA",board));
 
         fields.add(new SubjectField(1730,260, new Point2D(1690,560), "ZAHIR",board));
-        fields.add(new Field(1730,520, "MYSTERY BOX",board));
+        fields.add(new QuizField(1730,520, "QUIZ",board));
         fields.add(new SubjectField(1730,780, new Point2D(1690,1080),"PP1",board));
         fields.add(new SubjectField(1730,1040, new Point2D(1690,1340), "SO2",board));
         fields.add(new SubjectField(1730,1300, new Point2D(1690,1600), "PP2",board));

@@ -45,12 +45,11 @@ public class SideScreen extends AnchorPane {
     ArrayList<Button> quizButtons;
     int lastDicedPosition;
 
-    SideScreen(GameController controller, Pawn pawn, Board board){
+    SideScreen(GameController controller, Board board){
         super();
         this.board=board;
         this.moneyInfoLabels =new ArrayList<>();
         initLabelsAndButtons();
-        assignEventHandlers(controller, pawn, board);
 
         this.getChildren().add(isYourTurnLabel);
         this.getChildren().add(infoLabel);
@@ -77,13 +76,17 @@ public class SideScreen extends AnchorPane {
         });
     }
 
+    public void sendPawnInfo(GameController controller, Pawn pawn){
+        assignEventHandlers(controller, pawn, board);
+    }
+
     private void assignEventHandlers(GameController controller, Pawn pawn, Board board) {
         EventHandler<ActionEvent> endTurnEvent = e -> {
             controller.endTurnOnServer();
         };
         EventHandler<ActionEvent> movePawnEvent = e -> {
 
-                int random = /*new Random().nextInt(6) + 1*/ 8;
+                int random = /*new Random().nextInt(6) + 1*/ 3;
                 int randomPosition = (pawn.getPosition()+random)%24;
                 lastDicedPosition = randomPosition;
                 infoLabel.setText("Wylosowano: " + random + "\nPole: " + board.getFields().get(randomPosition).getName());
@@ -231,7 +234,6 @@ public class SideScreen extends AnchorPane {
         Platform.runLater(() -> {
             moneyPane.add(looseInfo, 0, 1);
         });
-
     }
 
     public void displayWinnerInfo(){
@@ -267,7 +269,7 @@ public class SideScreen extends AnchorPane {
         quizPane.setBackground(Background.fill(Color.WHITE));
         quizPane.setVisible(false);
         this.getChildren().add(quizPane);
-        quizPane.setLayoutX(100);
+        quizPane.setLayoutX(5);
         quizPane.setLayoutY(400);
     }
 

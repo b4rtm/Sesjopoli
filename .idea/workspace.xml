@@ -4,11 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2020402a-8095-4faa-946b-d847e994eeb3" name="Changes" comment="Mozliwosc grania w 2 lub 3 i naprawienie bledow kupowania domku">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="2020402a-8095-4faa-946b-d847e994eeb3" name="Changes" comment="Reset domków po przegranej gracza">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Menu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/game_objects/BoardBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/game_objects/BoardBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/game_objects/Pawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/game_objects/Pawn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/board.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/board.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,6 +23,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -96,7 +101,7 @@
       <workItem from="1685722070672" duration="10249000" />
       <workItem from="1685871434540" duration="114000" />
       <workItem from="1685871768813" duration="445000" />
-      <workItem from="1685878000979" duration="4171000" />
+      <workItem from="1685878000979" duration="10284000" />
     </task>
     <task id="LOCAL-00001" summary="Refaktoryzacja, obsługa imion i kary za wejście na pole innego gracza">
       <created>1685647900847</created>
@@ -119,7 +124,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685720198557</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Reset domków po przegranej gracza">
+      <created>1685882257620</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1685882257620</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -129,6 +141,7 @@
     <MESSAGE value="Refaktoryzacja, obsługa imion i kary za wejście na pole innego gracza" />
     <MESSAGE value="Przechodzenie przez start" />
     <MESSAGE value="Mozliwosc grania w 2 lub 3 i naprawienie bledow kupowania domku" />
-    <option name="LAST_COMMIT_MESSAGE" value="Mozliwosc grania w 2 lub 3 i naprawienie bledow kupowania domku" />
+    <MESSAGE value="Reset domków po przegranej gracza" />
+    <option name="LAST_COMMIT_MESSAGE" value="Reset domków po przegranej gracza" />
   </component>
 </project>

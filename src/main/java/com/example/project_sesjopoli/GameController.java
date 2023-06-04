@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Collections;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GameController {
 
@@ -32,24 +35,36 @@ public class GameController {
     private HashMap<Integer,House> positionsWithHouses;
 
     GameController(SmartGroup boardGroup, Board board) {
-        try {
-            String endpointUrl = LINK + "/getplayerid";
-            URL url = new URL(endpointUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            Type collectionType = new TypeToken<Integer>() {
-            }.getType();
-            Gson gson = new Gson();
-            playerId = gson.fromJson(reader, collectionType);
             this.board = board;
             this.boardGroup = boardGroup;
             this.positionsWithHouses = new HashMap<>();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.out.println(ex.getMessage());
-            playerId = -1;
-        }
+    }
+
+    public void drawPawns(Board board){
+        Platform.runLater(() -> {
+            for (int i = 0; i < board.getPawns().size(); ++i){
+                Field actualField = board.getFields().get(board.getPawns().get(i).getPosition());
+                Point2D cords = actualField.getPlace(board.getPawns().get(i).getPlayerId());
+                board.getPawns().get(i).setTranslateX(cords.getX());
+                board.getPawns().get(i).setTranslateY(cords.getY());
+            }
+        });
+    }
+
+    void initThreads() {
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
+
+        executorService.scheduleAtFixedRate(() -> {
+            handleGameState(sideScreen);
+        }, 0, 200, TimeUnit.MILLISECONDS);
+
+        executorService.scheduleAtFixedRate(() -> {
+            drawPawns(board);
+        }, 0, 50, TimeUnit.MILLISECONDS);
+    }
+
+    public void setPlayerId(int playerId) {
+        this.playerId = playerId;
     }
 
     public int getPlayerId() {
@@ -76,6 +91,7 @@ public class GameController {
                     hideOrShowButtons(current.whoseTurn, s);
                     movePawns(current.playerPositions);
                     buildHouse(current.positionOwners);
+                    setPawnsVisible(current.playerId);
                     updateMoneyPanel(current.money, current.names);
                     if (current.playerLostFlags.get(playerId - 1)){
                         sideScreen.displayLooserInfo();
@@ -187,9 +203,20 @@ public class GameController {
             }
         });
     }
+    private void setPawnsVisible(int numberOfPlayers) {
+        Platform.runLater(() -> {
+            for(int i=0;i<numberOfPlayers;++i){
+                board.getPawns().get(i).setVisible(true);
+            }
+        });
+    }
 
     public void setSideScreen(SideScreen sideScreen) {
         this.sideScreen = sideScreen;
+    }
+
+    public SideScreen getSideScreen() {
+        return sideScreen;
     }
 
     public HashMap<Integer, House> getPositionsWithHouses() {

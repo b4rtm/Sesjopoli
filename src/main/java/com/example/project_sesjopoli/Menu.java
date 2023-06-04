@@ -1,6 +1,10 @@
 package com.example.project_sesjopoli;
 
+import com.example.project_sesjopoli.game_objects.Board;
+import com.example.project_sesjopoli.game_objects.Pawn;
 import com.example.project_sesjopoli.post_objects.PostObjectForSettingName;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +19,14 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.example.project_sesjopoli.GameController.LINK;
 
@@ -26,17 +37,19 @@ public class Menu extends AnchorPane {
     private Button playButton;
     private Button exitButton;
     private TextField nameInput;
-    private final int playerId;
+    private GameController controller;
+    private Board board;
 
-    Menu(Stage primaryStage, Scene gameScene, int id) throws IOException {
+    Menu(Stage primaryStage, Scene gameScene, GameController controller, Board board) throws IOException {
         this.setStyle("-fx-background-color: rgb(121, 9, 15)");
+        this.controller = controller;
+        this.board = board;
         initInfo();
         initError();
         initNameInput();
         initPlayButton(primaryStage, gameScene);
         initExitButton(primaryStage);
         insertAllIntoPane();
-        this.playerId = id;
     }
 
     private void insertAllIntoPane() {
@@ -71,6 +84,24 @@ public class Menu extends AnchorPane {
                 error.setText("Nie wpisałeś imienia !!!");
             }
             else{
+                try {
+                    String endpointUrl = LINK + "/getplayerid";
+                    URL url = new URL(endpointUrl);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    Type collectionType = new TypeToken<Integer>() {
+                    }.getType();
+                    Gson gson = new Gson();
+                    int playerId = gson.fromJson(reader, collectionType);
+                    controller.setPlayerId(playerId);
+                    controller.initThreads();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    System.out.println(ex.getMessage());
+                    controller.setPlayerId(-1);
+                }
+                controller.getSideScreen().sendPawnInfo(controller, board.getPawns().get(controller.getPlayerId() - 1));
                 sendNameToServer();
                 primaryStage.setScene(gameScene);
             }
@@ -107,7 +138,7 @@ public class Menu extends AnchorPane {
     }
     private void sendNameToServer(){
         RestTemplate restTemplate = new RestTemplate();
-        PostObjectForSettingName dataRequest = new PostObjectForSettingName(playerId,nameInput.getText());
+        PostObjectForSettingName dataRequest = new PostObjectForSettingName(controller.getPlayerId() - 1,nameInput.getText());
         String responseEntity = restTemplate.postForObject(LINK + "/name", dataRequest, String.class);
     }
 }

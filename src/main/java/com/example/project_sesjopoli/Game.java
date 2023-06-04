@@ -68,11 +68,11 @@ public class Game extends Application {
         group.rotateByX(DEFAULT_BOARD_ANGLE);
     }
 
-    void initPrimaryStage(Stage primaryStage, Scene scene, int playerId){
+    void initPrimaryStage(Stage primaryStage, Scene scene){
         primaryStage.setOnCloseRequest(event -> {
             System.exit(0);
         });
-        primaryStage.setTitle("SESJOPOLI - " + playerId);
+        primaryStage.setTitle("SESJOPOLI");
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setResizable(false);
@@ -87,18 +87,6 @@ public class Game extends Application {
     SubScene initSideScene(SideScreen sideScreen) {
         SubScene sideScene = new SubScene(sideScreen, SIDE_SCENE_WIDTH, HEIGHT);
         return sideScene;
-    }
-
-    void initThreads(GameController controller, SideScreen sideScreen, ArrayList<Pawn> pawns, Board board) {
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
-
-        executorService.scheduleAtFixedRate(() -> {
-            controller.handleGameState(sideScreen);
-        }, 0, 200, TimeUnit.MILLISECONDS);
-
-        executorService.scheduleAtFixedRate(() -> {
-            drawPawns(board);
-        }, 0, 50, TimeUnit.MILLISECONDS);
     }
 
     void setBoardImage(Rectangle board){
@@ -129,17 +117,6 @@ public class Game extends Application {
         return pawns;
     }
 
-    public void drawPawns(Board board){
-        Platform.runLater(() -> {
-            for (int i = 0; i < board.getPawns().size(); ++i){
-                Field actualField = board.getFields().get(board.getPawns().get(i).getPosition());
-                Point2D cords = actualField.getPlace(board.getPawns().get(i).getPlayerId());
-                board.getPawns().get(i).setTranslateX(cords.getX());
-                board.getPawns().get(i).setTranslateY(cords.getY());
-            }
-        });
-    }
-
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -154,7 +131,7 @@ public class Game extends Application {
         Camera camera = new CameraFactory().initCamera();
 
         BorderPane wholeScreen = new BorderPane();
-        SideScreen sideScreen = new SideScreen(controller, pawns.get(controller.getPlayerId() - 1), board);
+        SideScreen sideScreen = new SideScreen(controller, board);
         SubScene mainScene = initMainScene(camera, boardGroup);
         SubScene sideScene = initSideScene(sideScreen);
 
@@ -166,14 +143,12 @@ public class Game extends Application {
         wholeScreen.setLeft(mainScene);
         wholeScreen.setRight(sideScene);
 
-        initThreads(controller, sideScreen, pawns, board);
-
         Scene gameScene = new Scene(wholeScreen, WIDTH, HEIGHT);
 
-        Menu menuLayout = new Menu(primaryStage, gameScene, controller.getPlayerId() - 1);
+        Menu menuLayout = new Menu(primaryStage, gameScene, controller, board);
         Scene menuScene = new Scene(menuLayout, WIDTH, HEIGHT);
 
-        initPrimaryStage(primaryStage, menuScene, controller.getPlayerId());
+        initPrimaryStage(primaryStage, menuScene);
     }
 
     public static void main(String[] args) {
