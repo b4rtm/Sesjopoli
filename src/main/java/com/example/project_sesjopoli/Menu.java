@@ -17,9 +17,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
+import static com.example.project_sesjopoli.GameController.LINK;
+
 public class Menu extends AnchorPane {
 
-    public String LINK = "http://localhost:8080";
     private Label info;
     private Label error;
     private Button playButton;

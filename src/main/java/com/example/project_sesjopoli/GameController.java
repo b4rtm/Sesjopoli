@@ -1,6 +1,7 @@
 package com.example.project_sesjopoli;
 
 import com.example.project_sesjopoli.game_objects.*;
+import com.example.project_sesjopoli.post_objects.PostObjectForAnsweringQuiz;
 import com.example.project_sesjopoli.post_objects.PostObjectForBuyingHouse;
 import com.example.project_sesjopoli.post_objects.PostObjectForMoving;
 import com.google.gson.Gson;
@@ -14,12 +15,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Collections;
 
 public class GameController {
@@ -86,6 +84,7 @@ public class GameController {
                         sideScreen.displayWinnerInfo();
 
                     }
+                    //showQuiz(current.questions);
                 }
             }
         };
@@ -119,6 +118,12 @@ public class GameController {
         String responseEntity = restTemplate.postForObject(LINK + "/house", dataRequest, String.class);
     }
 
+    public void sendQuizAnswer(int answerIndex, int questionIndex, int playerId) { //POST
+        RestTemplate restTemplate = new RestTemplate();
+        PostObjectForAnsweringQuiz dataRequest = new PostObjectForAnsweringQuiz(answerIndex, questionIndex, playerId);
+        String responseEntity = restTemplate.postForObject(LINK + "/answer", dataRequest, String.class);
+    }
+
     private void updateMoneyPanel(ArrayList<Integer> money, ArrayList<String> names) {
         for (Pawn pawn : board.getPawns()) {
             Platform.runLater(() -> {
@@ -149,6 +154,7 @@ public class GameController {
             s.getMovePawnButton().setDisable(true);
             s.getEndTurnButton().setDisable(true);
             s.getBuyHousePane().setVisible(false);
+            s.getQuizPane().setVisible(false);
         });
     }
 

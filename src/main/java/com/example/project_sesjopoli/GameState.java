@@ -12,4 +12,5 @@ public class GameState {
     public ArrayList<Boolean> playerLostFlags;
     public int whoseTurn;
     public int playerId;
+    public ArrayList<Question> questions;
 }
