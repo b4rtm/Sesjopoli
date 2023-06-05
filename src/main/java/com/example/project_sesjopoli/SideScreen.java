@@ -86,11 +86,11 @@ public class SideScreen extends AnchorPane {
         };
         EventHandler<ActionEvent> movePawnEvent = e -> {
 
-                int random = /*new Random().nextInt(6) + 1*/ 3;
+                int random = 1;
                 int randomPosition = (pawn.getPosition()+random)%24;
                 lastDicedPosition = randomPosition;
                 infoLabel.setText("Wylosowano: " + random + "\nPole: " + board.getFields().get(randomPosition).getName());
-                movePawnButton.setDisable(true);
+                movePawnButton.setVisible(false);
 
                 if(board.getFields().get(randomPosition) instanceof SubjectField){
                     if (!controller.getPositionsWithHouses().containsKey(randomPosition) || !controller.getPositionsWithHouses().get(randomPosition).isVisible()) { // nikt nie ma tego pola
@@ -110,7 +110,7 @@ public class SideScreen extends AnchorPane {
         };
         EventHandler<ActionEvent> buyHouseEvent = e -> {
                 infoLabel.setText("Kupiono przedmiot");
-                movePawnButton.setDisable(true);
+                movePawnButton.setVisible(false);
                 buyHousePane.setVisible(false);
                 controller.sendPurchaseInformation(pawn.getPlayerId()-1, lastDicedPosition);
         };

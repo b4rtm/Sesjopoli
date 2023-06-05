@@ -160,16 +160,16 @@ public class GameController {
     private void turnOnButtons(SideScreen s) {
         Platform.runLater(() -> {
             s.getIsYourTurnLabel().setText("TWOJA TURA");
-            if (!moved) s.getMovePawnButton().setDisable(false);
-            s.getEndTurnButton().setDisable(false);
+            if (!moved) s.getMovePawnButton().setVisible(true);
+            s.getEndTurnButton().setVisible(true);
         });
     }
 
     private void turnOffButtons(SideScreen s) {
         Platform.runLater(() -> {
             s.getIsYourTurnLabel().setText("NIE TWOJA TURA");
-            s.getMovePawnButton().setDisable(true);
-            s.getEndTurnButton().setDisable(true);
+            s.getMovePawnButton().setVisible(false);
+            s.getEndTurnButton().setVisible(false);
             s.getBuyHousePane().setVisible(false);
             s.getQuizPane().setVisible(false);
         });
@@ -193,6 +193,7 @@ public class GameController {
                     house.setTranslateX(cords.getX());
                     house.setTranslateY(cords.getY());
                     positionsWithHouses.put(i,house);
+                    System.out.println(actualField.getName());
                 }
                 else if(positionOwners.get(i) == -1 && positionsWithHouses.containsKey(i)){
                     positionsWithHouses.get(i).setVisible(false);
