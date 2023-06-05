@@ -2,23 +2,28 @@ package com.example.project_sesjopoli.game_objects;
 
 import javafx.scene.Group;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 
-public class House extends Group {
-    public House(){
-        Image roofImage = new Image("roof.jpg");
-        PhongMaterial roof = new PhongMaterial();
-        roof.setDiffuseMap(roofImage);
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-        Image wallImage = new Image("wall.jpg");
+public class House extends Group {
+    public House(int id){
+        List<Color> colors = new ArrayList<>(Arrays.asList(Color.YELLOW, Color.GREEN, Color.BLUE, Color.ORANGE));
+
+        PhongMaterial roof = new PhongMaterial();
+        roof.setDiffuseColor(colors.get(id));
+
         PhongMaterial wall = new PhongMaterial();
-        wall.setDiffuseMap(wallImage);
+        wall.setDiffuseColor(colors.get(id));
 
 
         Box wallBox = new Box(70, 70, 80);
-        Box roofBox = new Box(55, 68, 55);
+        Box roofBox = new Box(55, 67, 55);
         wallBox.setMaterial(wall);
         wallBox.setTranslateZ(-40);
         this.getChildren().add(wallBox);

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.Rectangle?>
+
+
+<Rectangle arcHeight="30.0" arcWidth="30.0" fill="#214bff" height="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" width="190.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" />

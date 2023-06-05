@@ -5,12 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cf207186-1c7a-40ae-b4ed-3a66f7f77df4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/game_objects/House.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/game_objects/House.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/roof.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/wall.jpg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,13 +40,28 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RunManager">
     <configuration name="GRA" type="Application" factoryName="Application" singleton="false">
       <option name="MAIN_CLASS_NAME" value="com.example.project_sesjopoli.Game" />
-      <module name="Sesjopoli" />
+      <module name="project_sesjopoli" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -61,6 +76,7 @@
       <option name="presentableId" value="Default" />
       <updated>1685967528935</updated>
       <workItem from="1685967528935" duration="142000" />
+      <workItem from="1685983375196" duration="2400000" />
     </task>
     <servers />
   </component>

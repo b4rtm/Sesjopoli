@@ -186,7 +186,7 @@ public class GameController {
             for (int i = 0; i < positionOwners.size(); ++i) {
                 if (positionOwners.get(i) != -1 && !positionsWithHouses.containsKey(i)) {
                     System.out.println(positionOwners.get(i));
-                    House house = new House();
+                    House house = new House(positionOwners.get(i));
                     boardGroup.getChildren().add(house);
                     Field actualField = board.getFields().get(i);
                     Point2D cords = actualField.getPlace(5);

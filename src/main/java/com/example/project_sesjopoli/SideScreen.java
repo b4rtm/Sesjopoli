@@ -8,6 +8,7 @@ import com.example.project_sesjopoli.game_objects.SubjectField;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,10 +16,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -45,11 +48,22 @@ public class SideScreen extends AnchorPane {
     ArrayList<Button> quizButtons;
     int lastDicedPosition;
 
-    SideScreen(GameController controller, Board board){
+    SideScreen(GameController controller, Board board) throws IOException {
         super();
         this.board=board;
         this.moneyInfoLabels =new ArrayList<>();
         initLabelsAndButtons();
+
+        FXMLLoader rectangleYellowLoader = new FXMLLoader(Menu.class.getResource("rect_yellow.fxml"));
+        Rectangle rectangleYellow = rectangleYellowLoader.load();
+        rectangleYellow.setLayoutX(5);
+        rectangleYellow.setLayoutY(40);
+        FXMLLoader rectangleGreenLoader = new FXMLLoader(Menu.class.getResource("rect_green.fxml"));
+        Rectangle rectangleGreen = rectangleGreenLoader.load();
+        rectangleGreen.setLayoutX(200);
+        rectangleGreen.setLayoutY(40);
+        this.getChildren().add(rectangleYellow);
+        this.getChildren().add(rectangleGreen);
 
         this.getChildren().add(isYourTurnLabel);
         this.getChildren().add(infoLabel);
@@ -86,7 +100,7 @@ public class SideScreen extends AnchorPane {
         };
         EventHandler<ActionEvent> movePawnEvent = e -> {
 
-                int random = 1;
+                int random = 4;
                 int randomPosition = (pawn.getPosition()+random)%24;
                 lastDicedPosition = randomPosition;
                 infoLabel.setText("Wylosowano: " + random + "\nPole: " + board.getFields().get(randomPosition).getName());
