@@ -1,9 +1,8 @@
 package com.example.project_sesjopoli;
 
-import com.example.project_sesjopoli.game_objects.*;
-import javafx.application.Platform;
 import com.example.project_sesjopoli.game_objects.Board;
 import com.example.project_sesjopoli.game_objects.Pawn;
+import com.example.project_sesjopoli.game_objects.QuizField;
 import com.example.project_sesjopoli.game_objects.SubjectField;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -18,6 +17,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -41,29 +42,17 @@ public class SideScreen extends AnchorPane {
     Button doBuyHouse;
     Button doNotBuyHouse;
     GridPane buyHousePane;
-    GridPane moneyPane;
     AnchorPane quizPane;
-    ArrayList<Label> moneyInfoLabels;
     Label question;
     ArrayList<Button> quizButtons;
+    ArrayList<AnchorPane> playersInfoPanes;
     int lastDicedPosition;
 
     SideScreen(GameController controller, Board board) throws IOException {
         super();
         this.board=board;
-        this.moneyInfoLabels =new ArrayList<>();
+        this.playersInfoPanes = new ArrayList<>();
         initLabelsAndButtons();
-
-        FXMLLoader rectangleYellowLoader = new FXMLLoader(Menu.class.getResource("rect_yellow.fxml"));
-        Rectangle rectangleYellow = rectangleYellowLoader.load();
-        rectangleYellow.setLayoutX(5);
-        rectangleYellow.setLayoutY(40);
-        FXMLLoader rectangleGreenLoader = new FXMLLoader(Menu.class.getResource("rect_green.fxml"));
-        Rectangle rectangleGreen = rectangleGreenLoader.load();
-        rectangleGreen.setLayoutX(200);
-        rectangleGreen.setLayoutY(40);
-        this.getChildren().add(rectangleYellow);
-        this.getChildren().add(rectangleGreen);
 
         this.getChildren().add(isYourTurnLabel);
         this.getChildren().add(infoLabel);
@@ -100,7 +89,7 @@ public class SideScreen extends AnchorPane {
         };
         EventHandler<ActionEvent> movePawnEvent = e -> {
 
-                int random = 4;
+                int random = 3;
                 int randomPosition = (pawn.getPosition()+random)%24;
                 lastDicedPosition = randomPosition;
                 infoLabel.setText("Wylosowano: " + random + "\nPole: " + board.getFields().get(randomPosition).getName());
@@ -139,19 +128,19 @@ public class SideScreen extends AnchorPane {
         doNotBuyHouse.setOnAction(doNotBuyHouseEvent);
     }
 
-    private void initLabelsAndButtons() {
+    private void initLabelsAndButtons() throws IOException {
         isYourTurnLabel = new Label();
         isYourTurnLabel.setFont(new Font(18));
         isYourTurnLabel.setTextFill(Color.WHITE);
-        isYourTurnLabel.setLayoutX(0);
-        isYourTurnLabel.setLayoutY(5);
+        isYourTurnLabel.setLayoutX(200);
+        isYourTurnLabel.setLayoutY(255);
 
 
         infoLabel = new Label();
         infoLabel.setFont(new Font(18));
         infoLabel.setTextFill(Color.WHITE);
-        infoLabel.setLayoutX(0);
-        infoLabel.setLayoutY(45);
+        infoLabel.setLayoutX(200);
+        infoLabel.setLayoutY(300);
 
         endTurnButton = new Button("Zakończ turę");
         endTurnButton.setFont(new Font(18));
@@ -164,33 +153,20 @@ public class SideScreen extends AnchorPane {
         movePawnButton.setLayoutY(600);
 
         doBuyHouse = new Button("TAK");
-        doBuyHouse.setFont(new Font(18));
+        doBuyHouse.setFont(new Font(12));
 
         doNotBuyHouse = new Button("NIE");
-        doNotBuyHouse.setFont(new Font(18));
+        doNotBuyHouse.setFont(new Font(12));
 
 
         buyQuestion = new Label("Czy chcesz kupic pole");
-        buyQuestion.setFont(new Font(18));
+        buyQuestion.setFont(new Font(12));
         buyQuestion.setTextFill(Color.WHITE);
 
 
-
         initBuyHousePane();
-        initMoneyPane();
         initQuizPane();
-
-
-        int rowIterator=0;
-        for(Pawn pawn: board.getPawns()){
-            Label label = new Label("gracz " + pawn.getPlayerId() + " ma " + INITIAL_ECTS + "ects");
-            label.setFont(new Font(FONT_SIZE));
-            label.setTextFill(Color.WHITE);
-            moneyInfoLabels.add(label);
-            moneyPane.add(label,0,rowIterator++);
-        }
-        this.getChildren().add(moneyPane);
-
+        initPlayersLabels();
 
         question = new Label("");
         question.setFont(new Font(FONT_SIZE));
@@ -224,13 +200,47 @@ public class SideScreen extends AnchorPane {
         quizPane.getChildren().add(but4);
     }
 
-    public void setTextInMoneyPane(int id, int money, String name) {
-        if (money <= 0){
-            moneyInfoLabels.get(id).setText(name + " przegrał!");
-        } else{
-            moneyInfoLabels.get(id).setText(name + " ma " + money + "ects");
-        }
+    private void createAnchorPane(String filename, int x, int y) throws IOException {
+        AnchorPane anchorPane = new AnchorPane();
+        FXMLLoader rectangleLoader = new FXMLLoader(Menu.class.getResource(filename));
+        Rectangle rectangle = rectangleLoader.load();
+        rectangle.setLayoutX(0);
+        rectangle.setLayoutY(0);
+        anchorPane.setVisible(false);
+        anchorPane.setLayoutX(x);
+        anchorPane.setLayoutY(y);
+
+        Text nameText = new Text();
+        nameText.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+        nameText.setFill(Color.WHITE);
+        nameText.setStroke(Color.BLACK);
+        nameText.setStrokeWidth(1);
+        nameText.setLayoutX(15);
+        nameText.setLayoutY(30);
+
+        Text moneyText = new Text();
+        moneyText.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+        moneyText.setFill(Color.WHITE);
+        moneyText.setStroke(Color.BLACK);
+        moneyText.setStrokeWidth(1);
+        moneyText.setLayoutX(15);
+        moneyText.setLayoutY(70);
+
+        anchorPane.getChildren().add(rectangle);
+        anchorPane.getChildren().add(nameText);
+        anchorPane.getChildren().add(moneyText);
+
+        this.getChildren().add(anchorPane);
+        playersInfoPanes.add(anchorPane);
+
     }
+    private void initPlayersLabels() throws IOException {
+        createAnchorPane("rect_yellow.fxml", 5, 40);
+        createAnchorPane("rect_green.fxml", 200, 40);
+        createAnchorPane("rect_blue.fxml", 5, 150);
+        createAnchorPane("rect_orange.fxml", 200, 150);
+    }
+
     public void setTextInQuizPane(Question q) {
         question.setText(q.getQuestion());
         for (int i=0;i<4;++i){
@@ -240,25 +250,25 @@ public class SideScreen extends AnchorPane {
 
     public void displayLooserInfo(){
         for (Pawn pawn: board.getPawns()){
-            moneyInfoLabels.get(pawn.getPlayerId() - 1).setVisible(false);
+            //moneyInfoLabels.get(pawn.getPlayerId() - 1).setVisible(false);
         }
         Label looseInfo = new Label("PRZEGRAŁEŚ!");
         looseInfo.setFont(new Font(LOOSE_FONT_SIZE));
         looseInfo.setTextFill(Color.WHITE);
         Platform.runLater(() -> {
-            moneyPane.add(looseInfo, 0, 1);
+           // moneyPane.add(looseInfo, 0, 1);
         });
     }
 
     public void displayWinnerInfo(){
         for (Pawn pawn: board.getPawns()){
-            moneyInfoLabels.get(pawn.getPlayerId() - 1).setVisible(false);
+            //moneyInfoLabels.get(pawn.getPlayerId() - 1).setVisible(false);
         }
         Label winnerInfo = new Label("WYGRAŁEŚ!");
         winnerInfo.setFont(new Font(LOOSE_FONT_SIZE));
         winnerInfo.setTextFill(Color.WHITE);
         Platform.runLater(() -> {
-            moneyPane.add(winnerInfo, 0, 1);
+            //moneyPane.add(winnerInfo, 0, 1);
         });
 
     }
@@ -266,16 +276,6 @@ public class SideScreen extends AnchorPane {
     public void disableAllButtons(){
         movePawnButton.setDisable(true);
         endTurnButton.setDisable(true);
-    }
-
-
-    private void initMoneyPane() {
-        moneyPane = new GridPane();
-        moneyPane.setPadding(new Insets(10));
-        moneyPane.setHgap(10);
-        moneyPane.setVgap(10);
-        moneyPane.setBackground(Background.fill(Color.DARKGRAY));
-        moneyPane.setLayoutY(200);
     }
 
     private void initQuizPane() {
@@ -299,13 +299,14 @@ public class SideScreen extends AnchorPane {
 
     public void initBuyHousePane(){
         buyHousePane = new GridPane();
-        buyHousePane.setPadding(new Insets(10));
-        buyHousePane.setHgap(10);
-        buyHousePane.setVgap(10);
+        buyHousePane.setPadding(new Insets(5));
+        buyHousePane.setHgap(5);
+        buyHousePane.setVgap(5);
 
-        buyHousePane.add(buyQuestion,1,9); // kolumna, wiersz
-        buyHousePane.add(doBuyHouse,0,10);
-        buyHousePane.add(doNotBuyHouse,2,10);
+        buyHousePane.add(buyQuestion,1,13); // kolumna, wiersz
+        buyHousePane.add(doBuyHouse,0,14);
+        buyHousePane.add(doNotBuyHouse,2,14);
+        buyHousePane.setLayoutY(200);
         buyHousePane.setVisible(false);
         this.getChildren().add(buyHousePane);
     }

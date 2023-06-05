@@ -1,25 +1,23 @@
 package com.example.project_sesjopoli;
 
-import com.example.project_sesjopoli.game_objects.*;
+import com.example.project_sesjopoli.game_objects.Board;
+import com.example.project_sesjopoli.game_objects.Field;
+import com.example.project_sesjopoli.game_objects.House;
 import com.example.project_sesjopoli.post_objects.PostObjectForAnsweringQuiz;
 import com.example.project_sesjopoli.post_objects.PostObjectForBuyingHouse;
 import com.example.project_sesjopoli.post_objects.PostObjectForMoving;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -92,7 +90,7 @@ public class GameController {
                     movePawns(current.playerPositions);
                     buildHouse(current.positionOwners);
                     setPawnsVisible(current.playerId);
-                    updateMoneyPanel(current.money, current.names);
+                    setPlayersLabels(current.playerId, current.money, current.names);
                     if (current.playerLostFlags.get(playerId - 1)){
                         sideScreen.displayLooserInfo();
                     }
@@ -141,13 +139,6 @@ public class GameController {
         String responseEntity = restTemplate.postForObject(LINK + "/answer", dataRequest, String.class);
     }
 
-    private void updateMoneyPanel(ArrayList<Integer> money, ArrayList<String> names) {
-        for (Pawn pawn : board.getPawns()) {
-            Platform.runLater(() -> {
-                sideScreen.setTextInMoneyPane(pawn.getPlayerId() - 1, money.get(pawn.getPlayerId() - 1), names.get(pawn.getPlayerId() - 1));
-            });
-        }
-    }
 
     private void hideOrShowButtons(int turn, SideScreen s) {
         if (turn == playerId) {
@@ -208,6 +199,18 @@ public class GameController {
         Platform.runLater(() -> {
             for(int i=0;i<numberOfPlayers;++i){
                 board.getPawns().get(i).setVisible(true);
+            }
+        });
+    }
+
+    private void setPlayersLabels(int numberOfPlayers, ArrayList<Integer> money, ArrayList<String> names) {
+        Platform.runLater(() -> {
+            for(int i=0;i<numberOfPlayers;++i){
+                sideScreen.playersInfoPanes.get(i).setVisible(true);
+                AnchorPane anchorPane = sideScreen.playersInfoPanes.get(i);
+
+                ((Text)anchorPane.getChildren().get(1)).setText(names.get(i));
+                ((Text)anchorPane.getChildren().get(2)).setText("ECTS: " + money.get(i));
             }
         });
     }
