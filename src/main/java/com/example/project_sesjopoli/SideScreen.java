@@ -11,6 +11,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
@@ -34,7 +36,6 @@ public class SideScreen extends AnchorPane {
     private static final int INITIAL_ECTS = 30;
     private static final int LOOSE_FONT_SIZE = 25;
     Board board;
-    Label isYourTurnLabel;
     Label infoLabel;
     Label buyQuestion;
     Button endTurnButton;
@@ -45,16 +46,14 @@ public class SideScreen extends AnchorPane {
     AnchorPane quizPane;
     Label question;
     ArrayList<Button> quizButtons;
-    ArrayList<AnchorPane> playersInfoPanes;
+    AnchorPane playerInfoPane;
     int lastDicedPosition;
 
     SideScreen(GameController controller, Board board) throws IOException {
         super();
         this.board=board;
-        this.playersInfoPanes = new ArrayList<>();
         initLabelsAndButtons();
 
-        this.getChildren().add(isYourTurnLabel);
         this.getChildren().add(infoLabel);
         this.getChildren().add(endTurnButton);
         this.getChildren().add(movePawnButton);
@@ -129,12 +128,6 @@ public class SideScreen extends AnchorPane {
     }
 
     private void initLabelsAndButtons() throws IOException {
-        isYourTurnLabel = new Label();
-        isYourTurnLabel.setFont(new Font(18));
-        isYourTurnLabel.setTextFill(Color.WHITE);
-        isYourTurnLabel.setLayoutX(200);
-        isYourTurnLabel.setLayoutY(255);
-
 
         infoLabel = new Label();
         infoLabel.setFont(new Font(18));
@@ -165,8 +158,8 @@ public class SideScreen extends AnchorPane {
 
 
         initBuyHousePane();
-        initQuizPane();
         initPlayersLabels();
+        initQuizPane();
 
         question = new Label("");
         question.setFont(new Font(FONT_SIZE));
@@ -200,7 +193,7 @@ public class SideScreen extends AnchorPane {
         quizPane.getChildren().add(but4);
     }
 
-    private void createAnchorPane(String filename, int x, int y) throws IOException {
+    private AnchorPane createAnchorPane(String filename, int x, int y) throws IOException {
         AnchorPane anchorPane = new AnchorPane();
         FXMLLoader rectangleLoader = new FXMLLoader(Menu.class.getResource(filename));
         Rectangle rectangle = rectangleLoader.load();
@@ -209,6 +202,16 @@ public class SideScreen extends AnchorPane {
         anchorPane.setVisible(false);
         anchorPane.setLayoutX(x);
         anchorPane.setLayoutY(y);
+
+
+        Image diceImage = new Image("/dice.png");
+        ImageView diceImageView = new ImageView(diceImage);
+        diceImageView.setLayoutX(130);
+        diceImageView.setLayoutY(45);
+        diceImageView.setStyle("-fx-background-color: BLACK");
+        diceImageView.setVisible(false);
+        diceImageView.setFitHeight(50);
+        diceImageView.setFitWidth(50);
 
         Text nameText = new Text();
         nameText.setFont(Font.font("Arial", FontWeight.BOLD, 30));
@@ -219,7 +222,7 @@ public class SideScreen extends AnchorPane {
         nameText.setLayoutY(30);
 
         Text moneyText = new Text();
-        moneyText.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+        moneyText.setFont(Font.font("Arial", FontWeight.BOLD, 25));
         moneyText.setFill(Color.WHITE);
         moneyText.setStroke(Color.BLACK);
         moneyText.setStrokeWidth(1);
@@ -229,16 +232,20 @@ public class SideScreen extends AnchorPane {
         anchorPane.getChildren().add(rectangle);
         anchorPane.getChildren().add(nameText);
         anchorPane.getChildren().add(moneyText);
+        anchorPane.getChildren().add(diceImageView);
 
-        this.getChildren().add(anchorPane);
-        playersInfoPanes.add(anchorPane);
-
+        return anchorPane;
     }
     private void initPlayersLabels() throws IOException {
-        createAnchorPane("rect_yellow.fxml", 5, 40);
-        createAnchorPane("rect_green.fxml", 200, 40);
-        createAnchorPane("rect_blue.fxml", 5, 150);
-        createAnchorPane("rect_orange.fxml", 200, 150);
+        playerInfoPane = new AnchorPane();
+        playerInfoPane.setLayoutX(0);
+        playerInfoPane.setLayoutY(0);
+        this.getChildren().add(playerInfoPane);
+
+        playerInfoPane.getChildren().add(createAnchorPane("rect_yellow.fxml", 5, 40));
+        playerInfoPane.getChildren().add(createAnchorPane("rect_green.fxml", 200, 40));
+        playerInfoPane.getChildren().add(createAnchorPane("rect_blue.fxml", 5, 150));
+        playerInfoPane.getChildren().add(createAnchorPane("rect_orange.fxml", 200, 150));
     }
 
     public void setTextInQuizPane(Question q) {
@@ -287,9 +294,7 @@ public class SideScreen extends AnchorPane {
         quizPane.setLayoutY(400);
     }
 
-    public Label getIsYourTurnLabel() {
-        return isYourTurnLabel;
-    }
+
     public Button getEndTurnButton() {
         return endTurnButton;
     }

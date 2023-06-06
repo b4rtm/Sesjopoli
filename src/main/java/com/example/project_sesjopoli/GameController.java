@@ -77,7 +77,7 @@ public class GameController {
         System.out.println(responseEntity);
     }
 
-    public void handleGameState(SideScreen s) {
+    public void handleGameState(SideScreen sideScreen) {
         Runnable requestTask = new Runnable() {
             @Override
             public void run() {
@@ -86,17 +86,18 @@ public class GameController {
                 if (responseEntity.getStatusCode().is2xxSuccessful()) {
 
                     GameState current = responseEntity.getBody();
-                    hideOrShowButtons(current.whoseTurn, s);
+                    showWhoseTurn(current.whoseTurn,current.playerId, sideScreen);
+                    hideOrShowButtons(current.whoseTurn, sideScreen);
                     movePawns(current.playerPositions);
                     buildHouse(current.positionOwners);
                     setPawnsVisible(current.playerId);
                     setPlayersLabels(current.playerId, current.money, current.names);
                     if (current.playerLostFlags.get(playerId - 1)){
-                        sideScreen.displayLooserInfo();
+                        GameController.this.sideScreen.displayLooserInfo();
                     }
                     if (playerWon(current)){
-                        sideScreen.disableAllButtons();
-                        sideScreen.displayWinnerInfo();
+                        GameController.this.sideScreen.disableAllButtons();
+                        GameController.this.sideScreen.displayWinnerInfo();
 
                     }
                     //showQuiz(current.questions);
@@ -105,6 +106,26 @@ public class GameController {
         };
         Thread requestThread = new Thread(requestTask);
         requestThread.start();
+    }
+
+    public void showWhoseTurn(int whoseTurn, int numberOfPlayers, SideScreen sideScreen){
+        Platform.runLater(() -> {
+            for(int id=1;id<=numberOfPlayers;id++) {
+                ((AnchorPane) sideScreen.playerInfoPane.getChildren().get(id - 1)).getChildren().get(3).setVisible(whoseTurn == id);
+            }
+        });
+    }
+
+    private void setPlayersLabels(int numberOfPlayers, ArrayList<Integer> money, ArrayList<String> names) {
+        Platform.runLater(() -> {
+            for(int i=0;i<numberOfPlayers;++i){
+                AnchorPane anchorPane = (AnchorPane) sideScreen.playerInfoPane.getChildren().get(i);
+                anchorPane.setVisible(true);
+
+                ((Text)anchorPane.getChildren().get(1)).setText(names.get(i));
+                ((Text)anchorPane.getChildren().get(2)).setText("ECTS: " + money.get(i));
+            }
+        });
     }
 
     public boolean playerWon(GameState current){
@@ -150,7 +171,6 @@ public class GameController {
 
     private void turnOnButtons(SideScreen s) {
         Platform.runLater(() -> {
-            s.getIsYourTurnLabel().setText("TWOJA TURA");
             if (!moved) s.getMovePawnButton().setVisible(true);
             s.getEndTurnButton().setVisible(true);
         });
@@ -158,7 +178,6 @@ public class GameController {
 
     private void turnOffButtons(SideScreen s) {
         Platform.runLater(() -> {
-            s.getIsYourTurnLabel().setText("NIE TWOJA TURA");
             s.getMovePawnButton().setVisible(false);
             s.getEndTurnButton().setVisible(false);
             s.getBuyHousePane().setVisible(false);
@@ -199,18 +218,6 @@ public class GameController {
         Platform.runLater(() -> {
             for(int i=0;i<numberOfPlayers;++i){
                 board.getPawns().get(i).setVisible(true);
-            }
-        });
-    }
-
-    private void setPlayersLabels(int numberOfPlayers, ArrayList<Integer> money, ArrayList<String> names) {
-        Platform.runLater(() -> {
-            for(int i=0;i<numberOfPlayers;++i){
-                sideScreen.playersInfoPanes.get(i).setVisible(true);
-                AnchorPane anchorPane = sideScreen.playersInfoPanes.get(i);
-
-                ((Text)anchorPane.getChildren().get(1)).setText(names.get(i));
-                ((Text)anchorPane.getChildren().get(2)).setText("ECTS: " + money.get(i));
             }
         });
     }
