@@ -8,11 +8,13 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
@@ -21,6 +23,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Scale;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,19 +36,20 @@ import static com.example.project_sesjopoli.GameController.LINK;
 public class SideScreen extends AnchorPane {
 
     public static final int FONT_SIZE = 18;
-    private static final int INITIAL_ECTS = 30;
     private static final int LOOSE_FONT_SIZE = 25;
     Board board;
     Label infoLabel;
     Label buyQuestion;
     Button endTurnButton;
-    Button movePawnButton;
+    ImageView throwDice;
+    ImageView dicedValue;
     Button doBuyHouse;
     Button doNotBuyHouse;
     GridPane buyHousePane;
     AnchorPane quizPane;
     Label question;
     ArrayList<Button> quizButtons;
+    ArrayList<Image> images;
     AnchorPane playerInfoPane;
     int lastDicedPosition;
 
@@ -53,12 +57,22 @@ public class SideScreen extends AnchorPane {
         super();
         this.board=board;
         initLabelsAndButtons();
+        loadImages();
 
         this.getChildren().add(infoLabel);
         this.getChildren().add(endTurnButton);
-        this.getChildren().add(movePawnButton);
+        this.getChildren().add(throwDice);
+        this.getChildren().add(dicedValue);
 
         this.setStyle("-fx-background-color: rgb(121, 9, 15)");
+    }
+
+    private void loadImages(){
+        images = new ArrayList<>();
+        for (int i=1;i<=6;++i){
+            Image img = new Image("/dice_" + i + "_icon.png");
+            images.add(img);
+        }
     }
 
     private void showQuiz(GameController controller, Pawn pawn, ArrayList<Question> questions) {
@@ -85,14 +99,17 @@ public class SideScreen extends AnchorPane {
     private void assignEventHandlers(GameController controller, Pawn pawn, Board board) {
         EventHandler<ActionEvent> endTurnEvent = e -> {
             controller.endTurnOnServer();
+            dicedValue.setVisible(false);
         };
-        EventHandler<ActionEvent> movePawnEvent = e -> {
+        EventHandler<MouseEvent> movePawnEvent = e -> {
 
-                int random = 3;
+                int random = new Random().nextInt(6)  + 1;
                 int randomPosition = (pawn.getPosition()+random)%24;
                 lastDicedPosition = randomPosition;
-                infoLabel.setText("Wylosowano: " + random + "\nPole: " + board.getFields().get(randomPosition).getName());
-                movePawnButton.setVisible(false);
+                infoLabel.setText("Pole: " + board.getFields().get(randomPosition).getName());
+                dicedValue.setImage(images.get(random-1));
+                dicedValue.setVisible(true);
+                throwDice.setVisible(false);
 
                 if(board.getFields().get(randomPosition) instanceof SubjectField){
                     if (!controller.getPositionsWithHouses().containsKey(randomPosition) || !controller.getPositionsWithHouses().get(randomPosition).isVisible()) { // nikt nie ma tego pola
@@ -112,7 +129,7 @@ public class SideScreen extends AnchorPane {
         };
         EventHandler<ActionEvent> buyHouseEvent = e -> {
                 infoLabel.setText("Kupiono przedmiot");
-                movePawnButton.setVisible(false);
+                throwDice.setVisible(false);
                 buyHousePane.setVisible(false);
                 controller.sendPurchaseInformation(pawn.getPlayerId()-1, lastDicedPosition);
         };
@@ -121,8 +138,23 @@ public class SideScreen extends AnchorPane {
                 buyHousePane.setVisible(false);
         };
 
+        Scale scale = new Scale(1.2, 1.2, 0, 0);
+
+        throwDice.setOnMouseEntered(event -> {
+            Bounds bounds = throwDice.getBoundsInLocal();
+            double centerX = bounds.getWidth() / 2;
+            double centerY = bounds.getHeight() / 2;
+
+            scale.setPivotX(centerX);
+            scale.setPivotY(centerY);
+            throwDice.getTransforms().add(scale);
+        });
+        throwDice.setOnMouseExited(event -> {
+            throwDice.getTransforms().remove(scale); // Remove the scaling transform
+        });
+
         endTurnButton.setOnAction(endTurnEvent);
-        movePawnButton.setOnAction(movePawnEvent);
+        throwDice.setOnMouseClicked(movePawnEvent);
         doBuyHouse.setOnAction(buyHouseEvent);
         doNotBuyHouse.setOnAction(doNotBuyHouseEvent);
     }
@@ -140,10 +172,20 @@ public class SideScreen extends AnchorPane {
         endTurnButton.setLayoutX(250);
         endTurnButton.setLayoutY(600);
 
-        movePawnButton = new Button("Rzuć kostką");
-        movePawnButton.setFont(new Font(18));
-        movePawnButton.setLayoutX(0);
-        movePawnButton.setLayoutY(600);
+        Image diceImage = new Image("/dice3.png");
+        throwDice = new ImageView(diceImage);
+        throwDice.setFitHeight(80);
+        throwDice.setPreserveRatio(true);
+        throwDice.setLayoutX(0);
+        throwDice.setLayoutY(550);
+        throwDice.setSmooth(true);
+
+        dicedValue = new ImageView();
+        dicedValue.setFitHeight(80);
+        dicedValue.setPreserveRatio(true);
+        dicedValue.setLayoutX(20);
+        dicedValue.setLayoutY(550);
+        dicedValue.setSmooth(true);
 
         doBuyHouse = new Button("TAK");
         doBuyHouse.setFont(new Font(12));
@@ -204,14 +246,14 @@ public class SideScreen extends AnchorPane {
         anchorPane.setLayoutY(y);
 
 
-        Image diceImage = new Image("/dice.png");
+        Image diceImage = new Image("/dice2.png");
         ImageView diceImageView = new ImageView(diceImage);
-        diceImageView.setLayoutX(130);
+        diceImageView.setLayoutX(126);
         diceImageView.setLayoutY(45);
-        diceImageView.setStyle("-fx-background-color: BLACK");
         diceImageView.setVisible(false);
-        diceImageView.setFitHeight(50);
-        diceImageView.setFitWidth(50);
+        diceImageView.setFitHeight(45);
+        diceImageView.setPreserveRatio(true);
+        diceImageView.setSmooth(true);
 
         Text nameText = new Text();
         nameText.setFont(Font.font("Arial", FontWeight.BOLD, 30));
@@ -281,7 +323,7 @@ public class SideScreen extends AnchorPane {
     }
 
     public void disableAllButtons(){
-        movePawnButton.setDisable(true);
+        throwDice.setDisable(true);
         endTurnButton.setDisable(true);
     }
 
@@ -298,8 +340,8 @@ public class SideScreen extends AnchorPane {
     public Button getEndTurnButton() {
         return endTurnButton;
     }
-    public Button getMovePawnButton() {
-        return movePawnButton;
+    public ImageView getMovePawnButton() {
+        return throwDice;
     }
 
     public void initBuyHousePane(){
