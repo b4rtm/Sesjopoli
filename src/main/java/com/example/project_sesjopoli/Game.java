@@ -1,24 +1,23 @@
 package com.example.project_sesjopoli;
 
 import com.example.project_sesjopoli.game_objects.Board;
-import com.example.project_sesjopoli.game_objects.Field;
 import com.example.project_sesjopoli.game_objects.Pawn;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.geometry.Point2D;
-import javafx.scene.*;
+import javafx.scene.Camera;
+import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class Game extends Application {
 
@@ -35,6 +34,8 @@ public class Game extends Application {
 
     public static final double MAX_DISTANCE = 1840.0;
     public static final double MIN_DISTANCE = -1120.0;
+
+    MediaPlayer mediaPlayer;
 
     boolean checkDistances(double movement, SmartGroup group){
         if (group.getTranslateZ() >= MAX_DISTANCE && movement < 0
@@ -117,9 +118,18 @@ public class Game extends Application {
         return pawns;
     }
 
+    private void playMusic() {
+        String musicFile = getClass().getResource("lady-of-the-80.mp3").toString();
+        Media media = new Media(musicFile);
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setVolume(0.04);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.play();
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-
+        playMusic();
 
         SmartGroup boardGroup = initBoardGroup();
         Board board = new Board();
