@@ -4,11 +4,13 @@ public class PunishmentInfo {
     public int payerId;
     public int payeeId;
     public int cost;
+    public int field;
 
-    public PunishmentInfo(int payerId, int payeeId, int cost){
+    public PunishmentInfo(int payerId, int payeeId, int cost, int field){
         this.payerId = payerId;
         this.payeeId = payeeId;
         this.cost = cost;
+        this.field = field;
     }
 
     public int getPayerId() {
@@ -36,6 +38,14 @@ public class PunishmentInfo {
     }
 
     public boolean isClear(){
-        return this.payerId == -1 && this.payeeId == -1&& this.cost == -1;
+        return this.payerId == -1 && this.payeeId == -1 && this.cost == -1;
+    }
+
+    public int getField() {
+        return field;
+    }
+
+    public void setField(int field) {
+        this.field = field;
     }
 }

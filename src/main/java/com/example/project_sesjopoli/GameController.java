@@ -13,10 +13,11 @@ import javafx.scene.text.Text;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -29,18 +30,17 @@ public class GameController {
     private Board board;
     private SmartGroup boardGroup;
     private SideScreen sideScreen;
-    private HashMap<Integer,House> positionsWithHouses;
-    private boolean createdPunishmentPane = false;
+    private HashMap<Integer, House> positionsWithHouses;
 
     GameController(SmartGroup boardGroup, Board board) {
-            this.board = board;
-            this.boardGroup = boardGroup;
-            this.positionsWithHouses = new HashMap<>();
+        this.board = board;
+        this.boardGroup = boardGroup;
+        this.positionsWithHouses = new HashMap<>();
     }
 
-    public void drawPawns(Board board){
+    public void drawPawns(Board board) {
         Platform.runLater(() -> {
-            for (int i = 0; i < board.getPawns().size(); ++i){
+            for (int i = 0; i < board.getPawns().size(); ++i) {
                 Field actualField = board.getFields().get(board.getPawns().get(i).getPosition());
                 Point2D cords = actualField.getPlace(board.getPawns().get(i).getPlayerId());
                 board.getPawns().get(i).setTranslateX(cords.getX());
@@ -86,34 +86,23 @@ public class GameController {
                 if (responseEntity.getStatusCode().is2xxSuccessful()) {
 
                     GameState current = responseEntity.getBody();
-                    showWhoseTurn(current.whoseTurn,current.playerId, sideScreen);
+                    showWhoseTurn(current.whoseTurn, current.playerId, sideScreen);
                     hideOrShowButtons(current.whoseTurn, sideScreen);
                     movePawns(current.playerPositions);
                     buildHouse(current.positionOwners);
                     setPawnsVisible(current.playerId);
                     setPlayersLabels(current.playerId, current.money, current.names);
-                    if(wasAPenalty(current.punishmentInfo)){
-                            Platform.runLater(() -> {
-                                try {
-                                    GameController.this.sideScreen.displayPunishmentInfo(current.names.get(current.punishmentInfo.payerId),
-                                            current.names.get(current.punishmentInfo.payeeId),
-                                            current.punishmentInfo.cost, current.names.get(playerId - 1));
-                                    createdPunishmentPane = true;
-
-
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            });
-                    } else if (createdPunishmentPane && current.punishmentInfo.isClear()){
-                        createdPunishmentPane = false;
-                        sideScreen.hidePunishmentInfo();
-
+                    if (wasAPenalty(current.punishmentInfo)) {
+                        Platform.runLater(() -> {
+                            GameController.this.sideScreen.displayPunishmentInfo(current.names.get(current.punishmentInfo.payerId),
+                                    current.names.get(current.punishmentInfo.payeeId),
+                                    current.punishmentInfo.cost, current.names.get(playerId - 1),current.punishmentInfo.field);
+                        });
                     }
-                    if (current.playerLostFlags.get(playerId - 1)){
+                    if (current.playerLostFlags.get(playerId - 1)) {
                         GameController.this.sideScreen.displayLooserInfo();
                     }
-                    if (playerWon(current)){
+                    if (playerWon(current)) {
                         GameController.this.sideScreen.displayWinnerInfo();
                     }
                     //showQuiz(current.questions);
@@ -126,12 +115,12 @@ public class GameController {
 
 
     private boolean wasAPenalty(PunishmentInfo punishmentInfo) {
-        return punishmentInfo.getPayerId() != -1 && punishmentInfo.getPayeeId() != -1 && punishmentInfo.getCost() != -1;
+        return punishmentInfo.getPayerId() != -1 && punishmentInfo.getPayeeId() != -1;
     }
 
-    public void showWhoseTurn(int whoseTurn, int numberOfPlayers, SideScreen sideScreen){
+    public void showWhoseTurn(int whoseTurn, int numberOfPlayers, SideScreen sideScreen) {
         Platform.runLater(() -> {
-            for(int id=1;id<=numberOfPlayers;id++) {
+            for (int id = 1; id <= numberOfPlayers; id++) {
                 ((AnchorPane) sideScreen.playerInfoPane.getChildren().get(id - 1)).getChildren().get(3).setVisible(whoseTurn == id);
             }
         });
@@ -139,17 +128,17 @@ public class GameController {
 
     private void setPlayersLabels(int numberOfPlayers, ArrayList<Integer> money, ArrayList<String> names) {
         Platform.runLater(() -> {
-            for(int i=0;i<numberOfPlayers;++i){
+            for (int i = 0; i < numberOfPlayers; ++i) {
                 AnchorPane anchorPane = (AnchorPane) sideScreen.playerInfoPane.getChildren().get(i);
                 anchorPane.setVisible(true);
 
-                ((Text)anchorPane.getChildren().get(1)).setText(names.get(i));
-                ((Text)anchorPane.getChildren().get(2)).setText("ECTS: " + money.get(i));
+                ((Text) anchorPane.getChildren().get(1)).setText(names.get(i));
+                ((Text) anchorPane.getChildren().get(2)).setText("ECTS: " + money.get(i));
             }
         });
     }
 
-    public boolean playerWon(GameState current){
+    public boolean playerWon(GameState current) {
         return (Collections.frequency(current.playerLostFlags, true) == current.playerId - 1
                 && !current.playerLostFlags.get(playerId - 1) && current.playerId > 1);
     }
@@ -223,21 +212,20 @@ public class GameController {
                     Point2D cords = actualField.getPlace(5);
                     house.setTranslateX(cords.getX());
                     house.setTranslateY(cords.getY());
-                    positionsWithHouses.put(i,house);
+                    positionsWithHouses.put(i, house);
                     System.out.println(actualField.getName());
-                }
-                else if(positionOwners.get(i) == -1 && positionsWithHouses.containsKey(i)){
+                } else if (positionOwners.get(i) == -1 && positionsWithHouses.containsKey(i)) {
                     positionsWithHouses.get(i).setVisible(false);
-                }
-                else if(positionOwners.get(i) != -1 && positionsWithHouses.containsKey(i)){
+                } else if (positionOwners.get(i) != -1 && positionsWithHouses.containsKey(i)) {
                     positionsWithHouses.get(i).setVisible(true);
                 }
             }
         });
     }
+
     private void setPawnsVisible(int numberOfPlayers) {
         Platform.runLater(() -> {
-            for(int i=0;i<numberOfPlayers;++i){
+            for (int i = 0; i < numberOfPlayers; ++i) {
                 board.getPawns().get(i).setVisible(true);
             }
         });

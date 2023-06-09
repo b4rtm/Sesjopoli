@@ -36,7 +36,7 @@ public class SideScreen extends AnchorPane {
     public static final int FONT_SIZE = 16;
     private static final int LOOSE_FONT_SIZE = 25;
     Board board;
-    Label infoLabel;
+    Label info;
     Text buyQuestion;
     Button endTurnButton;
     ImageView throwDice;
@@ -60,7 +60,6 @@ public class SideScreen extends AnchorPane {
         initLabelsAndButtons();
         loadImages();
 
-        this.getChildren().add(infoLabel);
         this.getChildren().add(endTurnButton);
         this.getChildren().add(throwDice);
         this.getChildren().add(dicedValue);
@@ -80,12 +79,21 @@ public class SideScreen extends AnchorPane {
     private void showQuiz(GameController controller, Pawn pawn, ArrayList<Question> questions) {
         Platform.runLater(() -> {
             int random = new Random().nextInt(questions.size());
+            int answer = questions.get(random).getCorrectAnswerIndex();
             for(int i=0;i< quizButtons.size();++i){
                 int finalI = i;
                 quizButtons.get(i).setOnAction(new EventHandler<>() {
                     @Override
                     public void handle(ActionEvent event) {
                         controller.sendQuizAnswer(finalI, random, pawn.getPlayerId() - 1);
+                        System.out.println("i: " + finalI);
+                        System.out.println("answer: " + answer);
+                        if(finalI==answer){
+                            info.setText("Poprawna odpowiedź");
+                        }
+                        else{
+                            info.setText("Błędna odpowiedź");
+                        }
                         quizPane.setVisible(false);
                     }
                 });
@@ -108,7 +116,7 @@ public class SideScreen extends AnchorPane {
                 int random = new Random().nextInt(6)  + 1;
                 int randomPosition = (pawn.getPosition()+random)%24;
                 lastDicedPosition = randomPosition;
-                infoLabel.setText("Stoisz na polu: " + board.getFields().get(randomPosition).getName());
+                info.setText("Stoisz na polu: " + board.getFields().get(randomPosition).getName());
                 dicedValue.setImage(images.get(random-1));
                 dicedValue.setVisible(true);
                 throwDice.setVisible(false);
@@ -130,7 +138,7 @@ public class SideScreen extends AnchorPane {
 
         };
         EventHandler<ActionEvent> buyHouseEvent = e -> {
-                infoLabel.setText("Kupiono przedmiot");
+                info.setText("Kupiono przedmiot");
                 throwDice.setVisible(false);
                 buyHousePane.setVisible(false);
                 controller.sendPurchaseInformation(pawn.getPlayerId()-1, lastDicedPosition);
@@ -184,11 +192,20 @@ public class SideScreen extends AnchorPane {
         winnerInfo.setVisible(false);
         this.getChildren().add(winnerInfo);
 
-        infoLabel = new Label();
-        infoLabel.setFont(new Font(18));
-        infoLabel.setTextFill(Color.WHITE);
-        infoLabel.setLayoutX(5);
-        infoLabel.setLayoutY(280);
+        FXMLLoader punishmentInfoPaneLoader = new FXMLLoader(Menu.class.getResource("punishment_info.fxml"));
+        punishmentInfoPane = punishmentInfoPaneLoader.load();
+        info = new Label("Panel Informacyjny...");
+        info.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 18));
+        info.setLayoutX(10);
+        info.setLayoutY(5);
+        info.setTextAlignment(TextAlignment.CENTER);
+        info.setWrapText(true);
+        info.setMaxWidth(360);
+        info.setTextFill(Color.BLACK);
+        punishmentInfoPane.getChildren().add(info);
+        punishmentInfoPane.setLayoutX(5);
+        punishmentInfoPane.setLayoutY(230);
+        this.getChildren().add(punishmentInfoPane);
 
         endTurnButton = new Button("Zakończ turę");
         endTurnButton.setFont(new Font(18));
@@ -385,26 +402,14 @@ public class SideScreen extends AnchorPane {
         return quizPane;
     }
 
-    public void displayPunishmentInfo(String payerName, String payeeName, int cost, String yourName) throws IOException {
-        FXMLLoader punishmentInfoPaneLoader = new FXMLLoader(Menu.class.getResource("punishment_info.fxml"));
-        punishmentInfoPane = punishmentInfoPaneLoader.load();
-        punishmentInfoPane.setLayoutX(5);
-        punishmentInfoPane.setLayoutY(305);
-        Label info;
-
+    public void displayPunishmentInfo(String payerName, String payeeName, int cost, String yourName, int field) {
         if (yourName.equals(payerName)){
-            info = new Label("Płacisz graczowi " + payeeName + " " + cost + " ECTS");
+            info.setText("Płacisz graczowi " + payeeName + " " + cost + " ECTS za wejście na: " + board.getFields().get(field).getName());
         } else if (yourName.equals(payeeName)){
-            info = new Label(payerName + " płaci ci " + cost + " ECTS");
+            info.setText(payerName + " płaci ci " + cost + " ECTS za wejście na: " + board.getFields().get(field).getName());
         } else {
-            info = new Label(payerName + " płaci graczowi " + payeeName + " " + cost + " ECTS");
+            info.setText(payerName + " płaci graczowi " + payeeName + " " + cost + " ECTS za wejście na: " + board.getFields().get(field).getName());
         }
-        info.setFont(new Font(20));
-        info.setLayoutX(10);
-
-
-        punishmentInfoPane.getChildren().add(info);
-        this.getChildren().add(punishmentInfoPane);
     }
 
     public AnchorPane getPunishmentInfoPane() {
