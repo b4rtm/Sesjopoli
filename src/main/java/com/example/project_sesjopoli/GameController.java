@@ -13,11 +13,10 @@ import javafx.scene.text.Text;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +30,7 @@ public class GameController {
     private SmartGroup boardGroup;
     private SideScreen sideScreen;
     private HashMap<Integer,House> positionsWithHouses;
+    private boolean createdPunishmentPane = false;
 
     GameController(SmartGroup boardGroup, Board board) {
             this.board = board;
@@ -92,6 +92,24 @@ public class GameController {
                     buildHouse(current.positionOwners);
                     setPawnsVisible(current.playerId);
                     setPlayersLabels(current.playerId, current.money, current.names);
+                    if(wasAPenalty(current.punishmentInfo)){
+                            Platform.runLater(() -> {
+                                try {
+                                    GameController.this.sideScreen.displayPunishmentInfo(current.names.get(current.punishmentInfo.payerId),
+                                            current.names.get(current.punishmentInfo.payeeId),
+                                            current.punishmentInfo.cost, current.names.get(playerId - 1));
+                                    createdPunishmentPane = true;
+
+
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            });
+                    } else if (createdPunishmentPane && current.punishmentInfo.isClear()){
+                        createdPunishmentPane = false;
+                        sideScreen.hidePunishmentInfo();
+
+                    }
                     if (current.playerLostFlags.get(playerId - 1)){
                         GameController.this.sideScreen.displayLooserInfo();
                     }
@@ -104,6 +122,11 @@ public class GameController {
         };
         Thread requestThread = new Thread(requestTask);
         requestThread.start();
+    }
+
+
+    private boolean wasAPenalty(PunishmentInfo punishmentInfo) {
+        return punishmentInfo.getPayerId() != -1 && punishmentInfo.getPayeeId() != -1 && punishmentInfo.getCost() != -1;
     }
 
     public void showWhoseTurn(int whoseTurn, int numberOfPlayers, SideScreen sideScreen){

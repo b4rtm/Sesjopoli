@@ -44,6 +44,7 @@ public class SideScreen extends AnchorPane {
     Button doBuyHouse;
     Button doNotBuyHouse;
     AnchorPane buyHousePane;
+    AnchorPane punishmentInfoPane;
     AnchorPane quizPane;
     Label question;
     Text winnerInfo;
@@ -65,6 +66,7 @@ public class SideScreen extends AnchorPane {
         this.getChildren().add(dicedValue);
 
         this.setStyle("-fx-background-color: rgb(121, 9, 15)");
+
     }
 
     private void loadImages(){
@@ -381,5 +383,39 @@ public class SideScreen extends AnchorPane {
 
     public AnchorPane getQuizPane() {
         return quizPane;
+    }
+
+    public void displayPunishmentInfo(String payerName, String payeeName, int cost, String yourName) throws IOException {
+        FXMLLoader punishmentInfoPaneLoader = new FXMLLoader(Menu.class.getResource("punishment_info.fxml"));
+        punishmentInfoPane = punishmentInfoPaneLoader.load();
+        punishmentInfoPane.setLayoutX(5);
+        punishmentInfoPane.setLayoutY(305);
+        Label info;
+
+        if (yourName.equals(payerName)){
+            info = new Label("Płacisz graczowi " + payeeName + " " + cost + " ECTS");
+        } else if (yourName.equals(payeeName)){
+            info = new Label(payerName + " płaci ci " + cost + " ECTS");
+        } else {
+            info = new Label(payerName + " płaci graczowi " + payeeName + " " + cost + " ECTS");
+        }
+        info.setFont(new Font(20));
+        info.setLayoutX(10);
+
+
+        punishmentInfoPane.getChildren().add(info);
+        this.getChildren().add(punishmentInfoPane);
+    }
+
+    public AnchorPane getPunishmentInfoPane() {
+        return punishmentInfoPane;
+    }
+
+    public void hidePunishmentInfo() {
+        Platform.runLater(() -> {
+            punishmentInfoPane.setVisible(false);
+            punishmentInfoPane.requestLayout();
+            System.out.println("Weszlo");
+        });
     }
 }
