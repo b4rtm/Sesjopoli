@@ -46,6 +46,8 @@ public class SideScreen extends AnchorPane {
     AnchorPane buyHousePane;
     AnchorPane quizPane;
     Label question;
+    Text winnerInfo;
+    Text looserInfo;
     ArrayList<Button> quizButtons;
     ArrayList<Image> images;
     AnchorPane playerInfoPane;
@@ -158,6 +160,27 @@ public class SideScreen extends AnchorPane {
     }
 
     private void initLabelsAndButtons() throws IOException {
+        looserInfo = new Text("PRZEGRAŁEŚ!");
+        looserInfo.setFont(Font.font("Arial", FontWeight.BOLD, 44));
+        looserInfo.setFill(Color.WHITE);
+        looserInfo.setStroke(Color.BLACK);
+        looserInfo.setStrokeWidth(2);
+        looserInfo.setSmooth(true);
+        looserInfo.setLayoutX(5);
+        looserInfo.setLayoutY(370);
+        looserInfo.setVisible(false);
+        this.getChildren().add(looserInfo);
+
+        winnerInfo = new Text("WYGRAŁEŚ!");
+        winnerInfo.setFont(Font.font("Arial", FontWeight.BOLD, 44));
+        winnerInfo.setFill(Color.WHITE);
+        winnerInfo.setStroke(Color.BLACK);
+        winnerInfo.setStrokeWidth(2);
+        winnerInfo.setSmooth(true);
+        winnerInfo.setLayoutX(5);
+        winnerInfo.setLayoutY(370);
+        winnerInfo.setVisible(false);
+        this.getChildren().add(winnerInfo);
 
         infoLabel = new Label();
         infoLabel.setFont(new Font(18));
@@ -169,6 +192,7 @@ public class SideScreen extends AnchorPane {
         endTurnButton.setFont(new Font(18));
         endTurnButton.setLayoutX(250);
         endTurnButton.setLayoutY(600);
+        endTurnButton.setVisible(false);
 
         Image diceImage = new Image("/dice3.png");
         throwDice = new ImageView(diceImage);
@@ -177,6 +201,7 @@ public class SideScreen extends AnchorPane {
         throwDice.setLayoutX(0);
         throwDice.setLayoutY(550);
         throwDice.setSmooth(true);
+        throwDice.setVisible(false);
 
         dicedValue = new ImageView();
         dicedValue.setFitHeight(80);
@@ -309,33 +334,15 @@ public class SideScreen extends AnchorPane {
     }
 
     public void displayLooserInfo(){
-        for (Pawn pawn: board.getPawns()){
-            //moneyInfoLabels.get(pawn.getPlayerId() - 1).setVisible(false);
-        }
-        Label looseInfo = new Label("PRZEGRAŁEŚ!");
-        looseInfo.setFont(new Font(LOOSE_FONT_SIZE));
-        looseInfo.setTextFill(Color.WHITE);
         Platform.runLater(() -> {
-           // moneyPane.add(looseInfo, 0, 1);
+            looserInfo.setVisible(true);
         });
     }
 
     public void displayWinnerInfo(){
-        for (Pawn pawn: board.getPawns()){
-            //moneyInfoLabels.get(pawn.getPlayerId() - 1).setVisible(false);
-        }
-        Label winnerInfo = new Label("WYGRAŁEŚ!");
-        winnerInfo.setFont(new Font(LOOSE_FONT_SIZE));
-        winnerInfo.setTextFill(Color.WHITE);
         Platform.runLater(() -> {
-            //moneyPane.add(winnerInfo, 0, 1);
+            winnerInfo.setVisible(true);
         });
-
-    }
-
-    public void disableAllButtons(){
-        throwDice.setDisable(true);
-        endTurnButton.setDisable(true);
     }
 
     private void initQuizPane() throws IOException {

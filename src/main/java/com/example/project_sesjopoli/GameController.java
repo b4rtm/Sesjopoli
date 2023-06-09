@@ -58,7 +58,7 @@ public class GameController {
 
         executorService.scheduleAtFixedRate(() -> {
             drawPawns(board);
-        }, 0, 50, TimeUnit.MILLISECONDS);
+        }, 0, 100, TimeUnit.MILLISECONDS);
     }
 
     public void setPlayerId(int playerId) {
@@ -96,9 +96,7 @@ public class GameController {
                         GameController.this.sideScreen.displayLooserInfo();
                     }
                     if (playerWon(current)){
-                        GameController.this.sideScreen.disableAllButtons();
                         GameController.this.sideScreen.displayWinnerInfo();
-
                     }
                     //showQuiz(current.questions);
                 }

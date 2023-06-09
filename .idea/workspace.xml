@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d5778e55-d74a-4bc4-a4c9-1683dd534adc" name="Changes" comment="Graficzne zmiany związane z rzucaniem kostką">
+    <list default="true" id="d5778e55-d74a-4bc4-a4c9-1683dd534adc" name="Changes" comment="Dodanie muzyki i zmiana wyglądu paneli">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Menu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +101,9 @@
       <option name="presentableId" value="Default" />
       <updated>1685987688304</updated>
       <workItem from="1686147102127" duration="5453000" />
-      <workItem from="1686217628520" duration="7276000" />
+      <workItem from="1686217628520" duration="8183000" />
+      <workItem from="1686254166535" duration="646000" />
+      <workItem from="1686291363301" duration="2655000" />
     </task>
     <task id="LOCAL-00001" summary="Graficzne zmiany związane z rzucaniem kostką">
       <created>1686151975257</created>
@@ -111,7 +112,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686151975257</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Dodanie muzyki i zmiana wyglądu paneli">
+      <created>1686233502754</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1686233502754</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -119,6 +127,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Graficzne zmiany związane z rzucaniem kostką" />
-    <option name="LAST_COMMIT_MESSAGE" value="Graficzne zmiany związane z rzucaniem kostką" />
+    <MESSAGE value="Dodanie muzyki i zmiana wyglądu paneli" />
+    <option name="LAST_COMMIT_MESSAGE" value="Dodanie muzyki i zmiana wyglądu paneli" />
   </component>
 </project>

@@ -1,7 +1,6 @@
 package com.example.project_sesjopoli;
 
 import com.example.project_sesjopoli.game_objects.Board;
-import com.example.project_sesjopoli.game_objects.Pawn;
 import com.example.project_sesjopoli.post_objects.PostObjectForSettingName;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -25,8 +24,6 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import static com.example.project_sesjopoli.GameController.LINK;
 
@@ -94,6 +91,10 @@ public class Menu extends AnchorPane {
                     }.getType();
                     Gson gson = new Gson();
                     int playerId = gson.fromJson(reader, collectionType);
+                    if(playerId>=5) {
+                        error.setText("Osiągnięto limit graczy!");
+                        return;
+                    }
                     controller.setPlayerId(playerId);
                     controller.initThreads();
                 } catch (Exception ex) {
