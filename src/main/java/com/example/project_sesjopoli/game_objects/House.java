@@ -1,7 +1,6 @@
 package com.example.project_sesjopoli.game_objects;
 
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -12,8 +11,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class House extends Group {
+
+    private int ownerId;
+    private List<Color> colors;
     public House(int id){
-        List<Color> colors = new ArrayList<>(Arrays.asList(Color.YELLOW, Color.GREEN, Color.BLUE, Color.ORANGE));
+        this.ownerId=id;
+        colors = new ArrayList<>(Arrays.asList(Color.YELLOW, Color.GREEN, Color.BLUE, Color.ORANGE));
 
         PhongMaterial roof = new PhongMaterial();
         roof.setDiffuseColor(colors.get(id));
@@ -37,5 +40,13 @@ public class House extends Group {
         roofBox.getTransforms().addAll(rotateX, rotateZ);
 
         this.getChildren().add(roofBox);
+    }
+
+    public int getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
     }
 }

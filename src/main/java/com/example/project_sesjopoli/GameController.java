@@ -92,6 +92,7 @@ public class GameController {
                     buildHouse(current.positionOwners);
                     setPawnsVisible(current.playerId);
                     setPlayersLabels(current.playerId, current.money, current.names);
+                    setHousesNotVisible(current.playerLostFlags);
                     if (wasAPenalty(current.punishmentInfo)) {
                         Platform.runLater(() -> {
                             GameController.this.sideScreen.displayPunishmentInfo(current.names.get(current.punishmentInfo.payerId),
@@ -111,6 +112,16 @@ public class GameController {
         };
         Thread requestThread = new Thread(requestTask);
         requestThread.start();
+    }
+
+    public void setHousesNotVisible(ArrayList<Boolean> playerLostFlags){
+        for(House house : positionsWithHouses.values()){
+            for(int i=0;i< playerLostFlags.size();i++){
+                if(house.getOwnerId() == i && playerLostFlags.get(i)){
+                    house.setVisible(false);
+                }
+            }
+        }
     }
 
 
@@ -214,10 +225,9 @@ public class GameController {
                     house.setTranslateY(cords.getY());
                     positionsWithHouses.put(i, house);
                     System.out.println(actualField.getName());
+
                 } else if (positionOwners.get(i) == -1 && positionsWithHouses.containsKey(i)) {
-                    positionsWithHouses.get(i).setVisible(false);
-                } else if (positionOwners.get(i) != -1 && positionsWithHouses.containsKey(i)) {
-                    positionsWithHouses.get(i).setVisible(true);
+                    positionsWithHouses.remove(i);
                 }
             }
         });
