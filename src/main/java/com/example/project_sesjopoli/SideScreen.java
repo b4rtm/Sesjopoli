@@ -412,6 +412,27 @@ public class SideScreen extends AnchorPane {
         }
     }
 
+    public void displayInnovationInfo(String payeeName, int cost, String yourName) {
+        if (yourName.equals(payeeName)){
+            if(cost < 0){
+                info.setText("Tracisz " + Math.abs(cost) + " ECTS za wejście na pole Innowacja");
+            }
+            else{
+                info.setText("Dostajesz " + cost + " ECTS za wejście na pole Innowacja");
+            }
+        }
+        else {
+            if(cost < 0){
+                info.setText(payeeName + " traci " + Math.abs(cost) + " ECTS za wejście na pole Innowacja");
+            }
+            else{
+                info.setText(payeeName + " dostaje " + cost + " ECTS za wejście na pole Innowacja");
+            }
+
+        }
+    }
+
+
     public AnchorPane getPunishmentInfoPane() {
         return punishmentInfoPane;
     }

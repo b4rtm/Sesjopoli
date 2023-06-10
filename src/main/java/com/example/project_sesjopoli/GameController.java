@@ -100,6 +100,12 @@ public class GameController {
                                     current.punishmentInfo.cost, current.names.get(playerId - 1),current.punishmentInfo.field);
                         });
                     }
+                    if(wasInnovationField(current.punishmentInfo)){
+                        Platform.runLater(() -> {
+                        GameController.this.sideScreen.displayInnovationInfo(current.names.get(current.punishmentInfo.payeeId),
+                                current.punishmentInfo.cost, current.names.get(playerId - 1));
+                        });
+                    }
                     if (current.playerLostFlags.get(playerId - 1)) {
                         GameController.this.sideScreen.displayLooserInfo();
                     }
@@ -127,6 +133,10 @@ public class GameController {
 
     private boolean wasAPenalty(PunishmentInfo punishmentInfo) {
         return punishmentInfo.getPayerId() != -1 && punishmentInfo.getPayeeId() != -1;
+    }
+
+    private boolean wasInnovationField(PunishmentInfo punishmentInfo) {
+        return punishmentInfo.getPayerId() == -1 && punishmentInfo.getPayeeId() != -1;
     }
 
     public void showWhoseTurn(int whoseTurn, int numberOfPlayers, SideScreen sideScreen) {
