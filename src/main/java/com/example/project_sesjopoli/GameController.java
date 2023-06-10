@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 public class GameController {
 
-    public static final String LINK = "http://localhost:8080";
+    public static final String LINK = "http://26.236.193.233:8080";
     private int playerId;
     private boolean moved;
     private Board board;
@@ -90,7 +90,7 @@ public class GameController {
                     hideOrShowButtons(current.whoseTurn, sideScreen);
                     movePawns(current.playerPositions);
                     buildHouse(current.positionOwners);
-                    setPawnsVisible(current.playerId);
+                    setPawnsVisible(current.playerId, current.playerLostFlags);
                     setPlayersLabels(current.playerId, current.money, current.names);
                     setHousesNotVisible(current.playerLostFlags);
                     if (wasAPenalty(current.punishmentInfo)) {
@@ -121,13 +121,18 @@ public class GameController {
     }
 
     public void setHousesNotVisible(ArrayList<Boolean> playerLostFlags){
+
         for(House house : positionsWithHouses.values()){
             for(int i=0;i< playerLostFlags.size();i++){
+                if(playerLostFlags.get(i)){
+                    board.getPawns().get(i).setVisible(false);
+                }
                 if(house.getOwnerId() == i && playerLostFlags.get(i)){
                     house.setVisible(false);
                 }
             }
         }
+
     }
 
 
@@ -243,10 +248,11 @@ public class GameController {
         });
     }
 
-    private void setPawnsVisible(int numberOfPlayers) {
+    private void setPawnsVisible(int numberOfPlayers, ArrayList<Boolean> playersLostFlags) {
         Platform.runLater(() -> {
             for (int i = 0; i < numberOfPlayers; ++i) {
-                board.getPawns().get(i).setVisible(true);
+                if(playersLostFlags.get(i) == false)
+                    board.getPawns().get(i).setVisible(true);
             }
         });
     }

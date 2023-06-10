@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d5778e55-d74a-4bc4-a4c9-1683dd534adc" name="Changes" comment="obsługa pól restauracji i możliwość kupienia pola po przegranym">
+    <list default="true" id="d5778e55-d74a-4bc4-a4c9-1683dd534adc" name="Changes" comment="informacja o bonusie z pola Innowacja">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java" afterDir="false" />
@@ -137,7 +137,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686392942663</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="informacja o bonusie z pola Innowacja">
+      <created>1686395045868</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1686395045869</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -147,18 +154,10 @@
     <MESSAGE value="Graficzne zmiany związane z rzucaniem kostką" />
     <MESSAGE value="Dodanie muzyki i zmiana wyglądu paneli" />
     <MESSAGE value="obsługa pól restauracji i możliwość kupienia pola po przegranym" />
-    <option name="LAST_COMMIT_MESSAGE" value="obsługa pól restauracji i możliwość kupienia pola po przegranym" />
+    <MESSAGE value="informacja o bonusie z pola Innowacja" />
+    <option name="LAST_COMMIT_MESSAGE" value="informacja o bonusie z pola Innowacja" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java</url>
-          <line>415</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="com.example.project_sesjopoli.GameState" memberName="punishmentInfo" />
