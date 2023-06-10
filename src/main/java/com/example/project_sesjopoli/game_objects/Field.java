@@ -24,8 +24,7 @@ public class Field {
     }
 
     public Point2D getPlace(int id){
-        Point2D cords = positions.get(id-1);
-        return cords;
+        return positions.get(id-1);
     }
 
     public String getName() {

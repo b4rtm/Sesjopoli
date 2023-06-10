@@ -74,45 +74,37 @@ public class GameController {
         RestTemplate restTemplate = new RestTemplate();
         PostObjectForMoving dataRequest = new PostObjectForMoving(playerId, field);
         String responseEntity = restTemplate.postForObject(LINK + "/update", dataRequest, String.class);
-        System.out.println(responseEntity);
     }
 
     public void handleGameState(SideScreen sideScreen) {
-        Runnable requestTask = new Runnable() {
-            @Override
-            public void run() {
-                RestTemplate restTemplate = new RestTemplate();
-                ResponseEntity<GameState> responseEntity = restTemplate.getForEntity(LINK + "/", GameState.class);
-                if (responseEntity.getStatusCode().is2xxSuccessful()) {
+        Runnable requestTask = () -> {
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<GameState> responseEntity = restTemplate.getForEntity(LINK + "/", GameState.class);
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
 
-                    GameState current = responseEntity.getBody();
-                    showWhoseTurn(current.whoseTurn, current.playerId, sideScreen);
-                    hideOrShowButtons(current.whoseTurn, sideScreen);
-                    movePawns(current.playerPositions);
-                    buildHouse(current.positionOwners);
-                    setPawnsVisible(current.playerId);
-                    setPlayersLabels(current.playerId, current.money, current.names);
-                    setHousesNotVisible(current.playerLostFlags);
-                    if (wasAPenalty(current.punishmentInfo)) {
-                        Platform.runLater(() -> {
-                            GameController.this.sideScreen.displayPunishmentInfo(current.names.get(current.punishmentInfo.payerId),
-                                    current.names.get(current.punishmentInfo.payeeId),
-                                    current.punishmentInfo.cost, current.names.get(playerId - 1),current.punishmentInfo.field);
-                        });
-                    }
-                    if(wasInnovationField(current.punishmentInfo)){
-                        Platform.runLater(() -> {
-                        GameController.this.sideScreen.displayInnovationInfo(current.names.get(current.punishmentInfo.payeeId),
-                                current.punishmentInfo.cost, current.names.get(playerId - 1));
-                        });
-                    }
-                    if (current.playerLostFlags.get(playerId - 1)) {
-                        GameController.this.sideScreen.displayLooserInfo();
-                    }
-                    if (playerWon(current)) {
-                        GameController.this.sideScreen.displayWinnerInfo();
-                    }
-                    //showQuiz(current.questions);
+                GameState current = responseEntity.getBody();
+                showWhoseTurn(current.whoseTurn, current.playerId, sideScreen);
+                hideOrShowButtons(current.whoseTurn, sideScreen);
+                movePawns(current.playerPositions);
+                buildHouse(current.positionOwners);
+                setPawnsVisible(current.playerId);
+                setPlayersLabels(current.playerId, current.money, current.names);
+                setHousesNotVisible(current.playerLostFlags);
+                if (wasAPenalty(current.punishmentInfo)) {
+                    Platform.runLater(() -> {
+                       sideScreen.displayPunishmentInfo(current,playerId);
+                    });
+                }
+                if(wasInnovationField(current.punishmentInfo)){
+                    Platform.runLater(() -> {
+                    GameController.this.sideScreen.displayInnovationInfo(current,playerId);
+                    });
+                }
+                if (current.playerLostFlags.get(playerId - 1)) {
+                    GameController.this.sideScreen.displayLooserInfo();
+                }
+                if (playerWon(current)) {
+                    GameController.this.sideScreen.displayWinnerInfo();
                 }
             }
         };
@@ -142,7 +134,7 @@ public class GameController {
     public void showWhoseTurn(int whoseTurn, int numberOfPlayers, SideScreen sideScreen) {
         Platform.runLater(() -> {
             for (int id = 1; id <= numberOfPlayers; id++) {
-                ((AnchorPane) sideScreen.playerInfoPane.getChildren().get(id - 1)).getChildren().get(3).setVisible(whoseTurn == id);
+                sideScreen.changeDicePosition(id,whoseTurn);
             }
         });
     }
@@ -152,7 +144,6 @@ public class GameController {
             for (int i = 0; i < numberOfPlayers; ++i) {
                 AnchorPane anchorPane = (AnchorPane) sideScreen.playerInfoPane.getChildren().get(i);
                 anchorPane.setVisible(true);
-
                 ((Text) anchorPane.getChildren().get(1)).setText(names.get(i));
                 ((Text) anchorPane.getChildren().get(2)).setText("ECTS: " + money.get(i));
             }

@@ -51,12 +51,14 @@ public class SideScreen extends AnchorPane {
     Text looserInfo;
     ArrayList<Button> quizButtons;
     ArrayList<Image> images;
+    ArrayList<ImageView> whoseTurnIcon;
     AnchorPane playerInfoPane;
     int lastDicedPosition;
 
     SideScreen(GameController controller, Board board) throws IOException {
         super();
         this.board=board;
+        whoseTurnIcon = new ArrayList<>();
         initLabelsAndButtons();
         loadImages();
 
@@ -160,7 +162,7 @@ public class SideScreen extends AnchorPane {
             throwDice.getTransforms().add(scale);
         });
         throwDice.setOnMouseExited(event -> {
-            throwDice.getTransforms().remove(scale); // Remove the scaling transform
+            throwDice.getTransforms().remove(scale);
         });
 
         endTurnButton.setOnAction(endTurnEvent);
@@ -170,65 +172,31 @@ public class SideScreen extends AnchorPane {
     }
 
     private void initLabelsAndButtons() throws IOException {
-        looserInfo = new Text("PRZEGRAŁEŚ!");
-        looserInfo.setFont(Font.font("Arial", FontWeight.BOLD, 44));
-        looserInfo.setFill(Color.WHITE);
-        looserInfo.setStroke(Color.BLACK);
-        looserInfo.setStrokeWidth(2);
-        looserInfo.setSmooth(true);
-        looserInfo.setLayoutX(5);
-        looserInfo.setLayoutY(370);
-        looserInfo.setVisible(false);
-        this.getChildren().add(looserInfo);
 
-        winnerInfo = new Text("WYGRAŁEŚ!");
-        winnerInfo.setFont(Font.font("Arial", FontWeight.BOLD, 44));
-        winnerInfo.setFill(Color.WHITE);
-        winnerInfo.setStroke(Color.BLACK);
-        winnerInfo.setStrokeWidth(2);
-        winnerInfo.setSmooth(true);
-        winnerInfo.setLayoutX(5);
-        winnerInfo.setLayoutY(370);
-        winnerInfo.setVisible(false);
-        this.getChildren().add(winnerInfo);
 
-        FXMLLoader punishmentInfoPaneLoader = new FXMLLoader(Menu.class.getResource("punishment_info.fxml"));
-        punishmentInfoPane = punishmentInfoPaneLoader.load();
-        info = new Label("Panel Informacyjny...");
-        info.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 18));
-        info.setLayoutX(10);
-        info.setLayoutY(5);
-        info.setTextAlignment(TextAlignment.CENTER);
-        info.setWrapText(true);
-        info.setMaxWidth(360);
-        info.setTextFill(Color.BLACK);
-        punishmentInfoPane.getChildren().add(info);
-        punishmentInfoPane.setLayoutX(5);
-        punishmentInfoPane.setLayoutY(230);
-        this.getChildren().add(punishmentInfoPane);
+        looserInfo = initText("PRZEGRAŁEŚ!");
+        winnerInfo = initText("WYGRAŁEŚ!");
+        initPunishmentInfoPane();
+        initDiceVisuals();
+        initEndTurnButton();
+        initBuyHouseButtons();
+        initQuestionToBuyField();
+        initBuyHousePane();
+        initPlayersLabels();
+        initQuizPane();
+    }
 
-        endTurnButton = new Button("Zakończ turę");
-        endTurnButton.setFont(new Font(18));
-        endTurnButton.setLayoutX(250);
-        endTurnButton.setLayoutY(600);
-        endTurnButton.setVisible(false);
+    private void initQuestionToBuyField() {
+        buyQuestion = new Text("Czy chcesz kupić to pole?");
+        buyQuestion.setFont(Font.font("Arial", FontWeight.BOLD, 25));
+        buyQuestion.setFill(Color.WHITE);
+        buyQuestion.setStroke(Color.BLACK);
+        buyQuestion.setStrokeWidth(1.2);
+        buyQuestion.setLayoutX(20);
+        buyQuestion.setLayoutY(40);
+    }
 
-        Image diceImage = new Image("/dice3.png");
-        throwDice = new ImageView(diceImage);
-        throwDice.setFitHeight(80);
-        throwDice.setPreserveRatio(true);
-        throwDice.setLayoutX(0);
-        throwDice.setLayoutY(550);
-        throwDice.setSmooth(true);
-        throwDice.setVisible(false);
-
-        dicedValue = new ImageView();
-        dicedValue.setFitHeight(80);
-        dicedValue.setPreserveRatio(true);
-        dicedValue.setLayoutX(20);
-        dicedValue.setLayoutY(550);
-        dicedValue.setSmooth(true);
-
+    private void initBuyHouseButtons() {
         doBuyHouse = new Button("TAK");
         doBuyHouse.setFont(new Font(20));
         doBuyHouse.setLayoutX(40);
@@ -238,56 +206,14 @@ public class SideScreen extends AnchorPane {
         doNotBuyHouse.setFont(new Font(20));
         doNotBuyHouse.setLayoutX(240);
         doNotBuyHouse.setLayoutY(100);
+    }
 
-
-        buyQuestion = new Text("Czy chcesz kupić to pole?");
-        buyQuestion.setFont(Font.font("Arial", FontWeight.BOLD, 25));
-        buyQuestion.setFill(Color.WHITE);
-        buyQuestion.setStroke(Color.BLACK);
-        buyQuestion.setStrokeWidth(1.2);
-        buyQuestion.setLayoutX(20);
-        buyQuestion.setLayoutY(40);
-
-
-        initBuyHousePane();
-        initPlayersLabels();
-        initQuizPane();
-
-        question = new Label("");
-        question.setFont(new Font(FONT_SIZE));
-        Button but1 = new Button("");
-        but1.setFont(new Font(FONT_SIZE));
-        Button but2 = new Button("");
-        but2.setFont(new Font(FONT_SIZE));
-        Button but3 = new Button("");
-        but3.setFont(new Font(FONT_SIZE));
-        Button but4 = new Button("");
-        but4.setFont(new Font(FONT_SIZE));
-        question.setTextAlignment(TextAlignment.CENTER);
-        question.setWrapText(true);
-        question.setMaxWidth(360);
-        question.setLayoutX(10);
-        question.setLayoutY(40);
-        but1.setLayoutX(20);
-        but1.setLayoutY(100);
-        but2.setLayoutX(250);
-        but2.setLayoutY(100);
-        but3.setLayoutX(20);
-        but3.setLayoutY(150);
-        but4.setLayoutX(250);
-        but4.setLayoutY(150);
-        quizButtons = new ArrayList<>();
-        quizButtons.add(but1);
-        quizButtons.add(but2);
-        quizButtons.add(but3);
-        quizButtons.add(but4);
-
-
-        quizPane.getChildren().add(question);
-        quizPane.getChildren().add(but1);
-        quizPane.getChildren().add(but2);
-        quizPane.getChildren().add(but3);
-        quizPane.getChildren().add(but4);
+    private void initEndTurnButton() {
+        endTurnButton = new Button("Zakończ turę");
+        endTurnButton.setFont(new Font(18));
+        endTurnButton.setLayoutX(250);
+        endTurnButton.setLayoutY(600);
+        endTurnButton.setVisible(false);
     }
 
     private AnchorPane createPlayerAnchorPane(String filename, int x, int y) throws IOException {
@@ -303,6 +229,7 @@ public class SideScreen extends AnchorPane {
 
         Image diceImage = new Image("/dice2.png");
         ImageView diceImageView = new ImageView(diceImage);
+        whoseTurnIcon.add(diceImageView);
         diceImageView.setLayoutX(126);
         diceImageView.setLayoutY(45);
         diceImageView.setVisible(false);
@@ -371,6 +298,33 @@ public class SideScreen extends AnchorPane {
         this.getChildren().add(quizPane);
         quizPane.setLayoutX(5);
         quizPane.setLayoutY(340);
+
+        quizButtons = new ArrayList<>();
+        int offsetX=230;
+        int offsetY=50;
+        for(int i=0;i<4;++i){
+            Button button = new Button("");
+            button.setFont(new Font(FONT_SIZE));
+            quizButtons.add(button);
+            quizPane.getChildren().add(button);
+        }
+
+        question = new Label("");
+        question.setFont(new Font(FONT_SIZE));
+        question.setTextAlignment(TextAlignment.CENTER);
+        question.setWrapText(true);
+        question.setMaxWidth(360);
+        question.setLayoutX(10);
+        question.setLayoutY(40);
+        quizPane.getChildren().add(question);
+        quizButtons.get(0).setLayoutX(20);
+        quizButtons.get(0).setLayoutY(100);
+        quizButtons.get(1).setLayoutX(250);
+        quizButtons.get(1).setLayoutY(100);
+        quizButtons.get(2).setLayoutX(20);
+        quizButtons.get(2).setLayoutY(150);
+        quizButtons.get(3).setLayoutX(250);
+        quizButtons.get(3).setLayoutY(150);
     }
 
 
@@ -402,7 +356,14 @@ public class SideScreen extends AnchorPane {
         return quizPane;
     }
 
-    public void displayPunishmentInfo(String payerName, String payeeName, int cost, String yourName, int field) {
+    public void displayPunishmentInfo(GameState current,int playerId) {
+
+        String payerName=current.names.get(current.punishmentInfo.payerId);
+        String payeeName=current.names.get(current.punishmentInfo.payeeId);
+        String yourName=current.names.get(playerId - 1);
+        int cost=current.punishmentInfo.cost;
+        int field=current.punishmentInfo.field;
+
         if (yourName.equals(payerName)){
             info.setText("Płacisz graczowi " + payeeName + " " + cost + " ECTS za wejście na: " + board.getFields().get(field).getName());
         } else if (yourName.equals(payeeName)){
@@ -412,7 +373,11 @@ public class SideScreen extends AnchorPane {
         }
     }
 
-    public void displayInnovationInfo(String payeeName, int cost, String yourName) {
+    public void displayInnovationInfo(GameState current,int playerId) {
+        String payeeName=current.names.get(current.punishmentInfo.payeeId);
+        String yourName=current.names.get(playerId - 1);
+        int cost= current.punishmentInfo.cost;
+
         if (yourName.equals(payeeName)){
             if(cost < 0){
                 info.setText("Tracisz " + Math.abs(cost) + " ECTS za wejście na pole Innowacja");
@@ -432,16 +397,56 @@ public class SideScreen extends AnchorPane {
         }
     }
 
-
-    public AnchorPane getPunishmentInfoPane() {
-        return punishmentInfoPane;
+    public void changeDicePosition(int id,int whoseTurn){
+        whoseTurnIcon.get(id - 1).setVisible(whoseTurn == id);
     }
 
-    public void hidePunishmentInfo() {
-        Platform.runLater(() -> {
-            punishmentInfoPane.setVisible(false);
-            punishmentInfoPane.requestLayout();
-            System.out.println("Weszlo");
-        });
+    private void initDiceVisuals() {
+        Image diceImage = new Image("/dice3.png");
+        throwDice = new ImageView(diceImage);
+        throwDice.setFitHeight(80);
+        throwDice.setPreserveRatio(true);
+        throwDice.setLayoutX(0);
+        throwDice.setLayoutY(550);
+        throwDice.setSmooth(true);
+        throwDice.setVisible(false);
+
+        dicedValue = new ImageView();
+        dicedValue.setFitHeight(80);
+        dicedValue.setPreserveRatio(true);
+        dicedValue.setLayoutX(20);
+        dicedValue.setLayoutY(550);
+        dicedValue.setSmooth(true);
+    }
+
+    private void initPunishmentInfoPane() throws IOException {
+        FXMLLoader punishmentInfoPaneLoader = new FXMLLoader(Menu.class.getResource("punishment_info.fxml"));
+        punishmentInfoPane = punishmentInfoPaneLoader.load();
+        info = new Label("Panel Informacyjny...");
+        info.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 18));
+        info.setLayoutX(10);
+        info.setLayoutY(5);
+        info.setTextAlignment(TextAlignment.CENTER);
+        info.setWrapText(true);
+        info.setMaxWidth(360);
+        info.setTextFill(Color.BLACK);
+        punishmentInfoPane.getChildren().add(info);
+        punishmentInfoPane.setLayoutX(5);
+        punishmentInfoPane.setLayoutY(230);
+        this.getChildren().add(punishmentInfoPane);
+    }
+
+    private Text initText(String value) {
+        Text text = new Text(value);
+        text.setFont(Font.font("Arial", FontWeight.BOLD, 44));
+        text.setFill(Color.WHITE);
+        text.setStroke(Color.BLACK);
+        text.setStrokeWidth(2);
+        text.setSmooth(true);
+        text.setLayoutX(5);
+        text.setLayoutY(370);
+        text.setVisible(false);
+        this.getChildren().add(text);
+        return text;
     }
 }

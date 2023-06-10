@@ -2,8 +2,6 @@ package com.example.project_sesjopoli;
 
 import com.example.project_sesjopoli.game_objects.Board;
 import com.example.project_sesjopoli.post_objects.PostObjectForSettingName;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -16,14 +14,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import static com.example.project_sesjopoli.GameController.LINK;
 
@@ -81,35 +75,28 @@ public class Menu extends AnchorPane {
                 error.setText("Nie wpisałeś imienia !!!");
             }
             else{
-                try {
-                    String endpointUrl = LINK + "/getplayerid";
-                    URL url = new URL(endpointUrl);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod("GET");
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    Type collectionType = new TypeToken<Integer>() {
-                    }.getType();
-                    Gson gson = new Gson();
-                    int playerId = gson.fromJson(reader, collectionType);
-                    if(playerId>=5) {
-                        error.setText("Osiągnięto limit graczy!");
-                        return;
-                    }
-                    controller.setPlayerId(playerId);
-                    controller.initThreads();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    System.out.println(ex.getMessage());
-                    controller.setPlayerId(-1);
-                }
-                controller.getSideScreen().sendPawnInfo(controller, board.getPawns().get(controller.getPlayerId() - 1));
-                sendNameToServer();
-                primaryStage.setScene(gameScene);
+                startGame(primaryStage,gameScene);
             }
         };
         playButton.setOnAction(play);
     }
-
+    private void startGame(Stage primaryStage, Scene gameScene){
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Integer> responseEntity = restTemplate.getForEntity(LINK + "/getplayerid", Integer.class);
+        if (responseEntity.getStatusCode().is2xxSuccessful()){
+            Integer playerId = responseEntity.getBody();
+            System.out.println(playerId);
+            if(playerId>=5) {
+                error.setText("Osiągnięto limit graczy!");
+                return;
+            }
+            controller.setPlayerId(playerId);
+            controller.initThreads();
+            controller.getSideScreen().sendPawnInfo(controller, board.getPawns().get(controller.getPlayerId() - 1));
+            sendNameToServer();
+            primaryStage.setScene(gameScene);
+        }
+    }
     private void initNameInput() {
         nameInput = new TextField();
         nameInput.setFont(new Font(30));

@@ -7,7 +7,10 @@
     <list default="true" id="d5778e55-d74a-4bc4-a4c9-1683dd534adc" name="Changes" comment="obsługa pól restauracji i możliwość kupienia pola po przegranym">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Menu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/game_objects/Field.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/game_objects/Field.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/game_objects/Pawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/game_objects/Pawn.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +53,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/barte/OneDrive - Politechnika Łódzka/Pulpit/Sesjopoli",
+    "last_opened_file_path": "C:/Users/mateu/OneDrive/Pulpit/Sesjopoli_serwer",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -115,6 +118,8 @@
       <workItem from="1686254166535" duration="646000" />
       <workItem from="1686291363301" duration="2655000" />
       <workItem from="1686333794582" duration="6742000" />
+      <workItem from="1686397611991" duration="1313000" />
+      <workItem from="1686405158676" duration="3751000" />
     </task>
     <task id="LOCAL-00001" summary="Graficzne zmiany związane z rzucaniem kostką">
       <created>1686151975257</created>
@@ -150,15 +155,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="obsługa pól restauracji i możliwość kupienia pola po przegranym" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java</url>
-          <line>415</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="com.example.project_sesjopoli.GameState" memberName="punishmentInfo" />
