@@ -85,7 +85,6 @@ public class Menu extends AnchorPane {
         ResponseEntity<Integer> responseEntity = restTemplate.getForEntity(LINK + "/getplayerid", Integer.class);
         if (responseEntity.getStatusCode().is2xxSuccessful()){
             Integer playerId = responseEntity.getBody();
-            System.out.println(playerId);
             if(playerId>=5) {
                 error.setText("Osiągnięto limit graczy!");
                 return;

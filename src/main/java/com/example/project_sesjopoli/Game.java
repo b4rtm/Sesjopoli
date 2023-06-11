@@ -74,6 +74,8 @@ public class Game extends Application {
             System.exit(0);
         });
         primaryStage.setTitle("SESJOPOLI");
+        Image iconImage = new Image(getClass().getResourceAsStream("/icon.png"));
+        primaryStage.getIcons().add(iconImage);
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setResizable(false);

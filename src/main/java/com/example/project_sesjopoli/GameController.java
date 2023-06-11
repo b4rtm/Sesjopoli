@@ -165,7 +165,6 @@ public class GameController {
             connection.getInputStream();
         } catch (Exception ex) {
             ex.printStackTrace();
-            System.out.println(ex.getMessage());
         }
     }
 
@@ -217,7 +216,6 @@ public class GameController {
         Platform.runLater(() -> {
             for (int i = 0; i < positionOwners.size(); ++i) {
                 if (positionOwners.get(i) != -1 && !positionsWithHouses.containsKey(i)) {
-                    System.out.println(positionOwners.get(i));
                     House house = new House(positionOwners.get(i));
                     boardGroup.getChildren().add(house);
                     Field actualField = board.getFields().get(i);
@@ -225,7 +223,6 @@ public class GameController {
                     house.setTranslateX(cords.getX());
                     house.setTranslateY(cords.getY());
                     positionsWithHouses.put(i, house);
-                    System.out.println(actualField.getName());
 
                 } else if (positionOwners.get(i) == -1 && positionsWithHouses.containsKey(i)) {
                     positionsWithHouses.remove(i);

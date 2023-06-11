@@ -88,8 +88,6 @@ public class SideScreen extends AnchorPane {
                     @Override
                     public void handle(ActionEvent event) {
                         controller.sendQuizAnswer(finalI, random, pawn.getPlayerId() - 1);
-                        System.out.println("i: " + finalI);
-                        System.out.println("answer: " + answer);
                         if(finalI==answer){
                             info.setText("Poprawna odpowiedź");
                         }
