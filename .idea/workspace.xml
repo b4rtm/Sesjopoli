@@ -5,10 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d5778e55-d74a-4bc4-a4c9-1683dd534adc" name="Changes" comment="informacja o bonusie z pola Innowacja">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/game_objects/Field.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/game_objects/Field.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/game_objects/Pawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/game_objects/Pawn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +50,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/mateu/OneDrive/Pulpit/Sesjopoli_serwer&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/barte/OneDrive - Politechnika Łódzka/Pulpit/Sesjopoli&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -161,6 +160,15 @@
     <option name="LAST_COMMIT_MESSAGE" value="informacja o bonusie z pola Innowacja" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java</url>
+          <line>162</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="com.example.project_sesjopoli.GameState" memberName="punishmentInfo" />

@@ -69,9 +69,12 @@ public class Game extends Application {
         group.rotateByX(DEFAULT_BOARD_ANGLE);
     }
 
-    void initPrimaryStage(Stage primaryStage, Scene scene){
+    void initPrimaryStage(Stage primaryStage, Scene scene, GameController gameController){
         primaryStage.setOnCloseRequest(event -> {
-            System.exit(0);
+            if (!gameController.playerWon(gameController.getCurrent()) && gameController.getCurrent().playerId != 1) {
+                gameController.sendExitInformation(gameController.getPlayerId()-1);
+            }
+                System.exit(0);
         });
         primaryStage.setTitle("SESJOPOLI");
         Image iconImage = new Image(getClass().getResourceAsStream("/icon.png"));
@@ -131,7 +134,7 @@ public class Game extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        playMusic();
+       // playMusic();
 
         SmartGroup boardGroup = initBoardGroup();
         Board board = new Board();
@@ -160,7 +163,7 @@ public class Game extends Application {
         Menu menuLayout = new Menu(primaryStage, gameScene, controller, board);
         Scene menuScene = new Scene(menuLayout, WIDTH, HEIGHT);
 
-        initPrimaryStage(primaryStage, menuScene);
+        initPrimaryStage(primaryStage, menuScene, controller);
     }
 
     public static void main(String[] args) {

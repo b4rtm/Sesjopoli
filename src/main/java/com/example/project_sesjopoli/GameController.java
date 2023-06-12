@@ -31,6 +31,7 @@ public class GameController {
     private SmartGroup boardGroup;
     private SideScreen sideScreen;
     private HashMap<Integer, House> positionsWithHouses;
+    private GameState current;
 
     GameController(SmartGroup boardGroup, Board board) {
         this.board = board;
@@ -82,12 +83,12 @@ public class GameController {
             ResponseEntity<GameState> responseEntity = restTemplate.getForEntity(LINK + "/", GameState.class);
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
 
-                GameState current = responseEntity.getBody();
+                current = responseEntity.getBody();
                 showWhoseTurn(current.whoseTurn, current.playerId, sideScreen);
                 hideOrShowButtons(current.whoseTurn, sideScreen);
                 movePawns(current.playerPositions);
                 buildHouse(current.positionOwners);
-                setPawnsVisible(current.playerId);
+                setPawnsVisible(current.playerId, current.playerLostFlags);
                 setPlayersLabels(current.playerId, current.money, current.names);
                 setHousesNotVisible(current.playerLostFlags);
                 if (wasAPenalty(current.punishmentInfo)) {
@@ -115,6 +116,9 @@ public class GameController {
     public void setHousesNotVisible(ArrayList<Boolean> playerLostFlags){
         for(House house : positionsWithHouses.values()){
             for(int i=0;i< playerLostFlags.size();i++){
+                if(playerLostFlags.get(i)){
+                    board.getPawns().get(i).setVisible(false);
+                }
                 if(house.getOwnerId() == i && playerLostFlags.get(i)){
                     house.setVisible(false);
                 }
@@ -175,6 +179,11 @@ public class GameController {
         String responseEntity = restTemplate.postForObject(LINK + "/house", dataRequest, String.class);
     }
 
+    public void sendExitInformation(Integer playerId) { //POST
+        RestTemplate restTemplate = new RestTemplate();
+        String responseEntity = restTemplate.postForObject(LINK + "/exit", playerId, String.class);
+    }
+
     public void sendQuizAnswer(int answerIndex, int questionIndex, int playerId) { //POST
         RestTemplate restTemplate = new RestTemplate();
         PostObjectForAnsweringQuiz dataRequest = new PostObjectForAnsweringQuiz(answerIndex, questionIndex, playerId);
@@ -231,10 +240,13 @@ public class GameController {
         });
     }
 
-    private void setPawnsVisible(int numberOfPlayers) {
+    private void setPawnsVisible(int numberOfPlayers, ArrayList<Boolean> playersLostFlags) {
         Platform.runLater(() -> {
             for (int i = 0; i < numberOfPlayers; ++i) {
-                board.getPawns().get(i).setVisible(true);
+                if(playersLostFlags.get(i) == false)
+                    board.getPawns().get(i).setVisible(true);
+                else
+                    board.getPawns().get(i).setVisible(false);
             }
         });
     }
@@ -249,5 +261,9 @@ public class GameController {
 
     public HashMap<Integer, House> getPositionsWithHouses() {
         return positionsWithHouses;
+    }
+
+    public GameState getCurrent() {
+        return current;
     }
 }
