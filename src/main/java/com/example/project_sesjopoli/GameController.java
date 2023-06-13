@@ -149,7 +149,8 @@ public class GameController {
                 AnchorPane anchorPane = (AnchorPane) sideScreen.playerInfoPane.getChildren().get(i);
                 anchorPane.setVisible(true);
                 ((Text) anchorPane.getChildren().get(1)).setText(names.get(i));
-                ((Text) anchorPane.getChildren().get(2)).setText("ECTS: " + money.get(i));
+                if(money.get(i)!=-1000) ((Text) anchorPane.getChildren().get(2)).setText("ECTS: " + money.get(i));
+                else ((Text) anchorPane.getChildren().get(2)).setText("PRZEGRANY");
             }
         });
     }

@@ -6,8 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="d5778e55-d74a-4bc4-a4c9-1683dd534adc" name="Changes" comment="informacja o bonusie z pola Innowacja">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/Menu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/SideScreen.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,6 +118,8 @@
       <workItem from="1686333794582" duration="6742000" />
       <workItem from="1686397611991" duration="1313000" />
       <workItem from="1686405158676" duration="3751000" />
+      <workItem from="1686668730113" duration="1066000" />
+      <workItem from="1686689318228" duration="1702000" />
     </task>
     <task id="LOCAL-00001" summary="Graficzne zmiany związane z rzucaniem kostką">
       <created>1686151975257</created>
@@ -164,7 +167,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/example/project_sesjopoli/GameController.java</url>
-          <line>162</line>
+          <line>153</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>

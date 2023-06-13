@@ -41,6 +41,7 @@ public class SideScreen extends AnchorPane {
     Button endTurnButton;
     ImageView throwDice;
     ImageView dicedValue;
+    ImageView surrender;
     Button doBuyHouse;
     Button doNotBuyHouse;
     AnchorPane buyHousePane;
@@ -65,6 +66,7 @@ public class SideScreen extends AnchorPane {
         this.getChildren().add(endTurnButton);
         this.getChildren().add(throwDice);
         this.getChildren().add(dicedValue);
+        this.getChildren().add(surrender);
 
         this.setStyle("-fx-background-color: rgb(121, 9, 15)");
 
@@ -137,6 +139,11 @@ public class SideScreen extends AnchorPane {
                 controller.sendPositionUpdateToServer(pawn.getPlayerId()-1, pawn.getPosition()+random);
 
         };
+        EventHandler<MouseEvent> surrenderEvent = e -> {
+            if (!controller.playerWon(controller.getCurrent()) && controller.getCurrent().playerId != 1) {
+                controller.sendExitInformation(controller.getPlayerId()-1);
+            }
+        };
         EventHandler<ActionEvent> buyHouseEvent = e -> {
                 info.setText("Kupiono przedmiot");
                 throwDice.setVisible(false);
@@ -162,9 +169,22 @@ public class SideScreen extends AnchorPane {
         throwDice.setOnMouseExited(event -> {
             throwDice.getTransforms().remove(scale);
         });
+        surrender.setOnMouseEntered(event -> {
+            Bounds bounds = surrender.getBoundsInLocal();
+            double centerX = bounds.getWidth() / 2;
+            double centerY = bounds.getHeight() / 2;
+
+            scale.setPivotX(centerX);
+            scale.setPivotY(centerY);
+            surrender.getTransforms().add(scale);
+        });
+        surrender.setOnMouseExited(event -> {
+            surrender.getTransforms().remove(scale);
+        });
 
         endTurnButton.setOnAction(endTurnEvent);
         throwDice.setOnMouseClicked(movePawnEvent);
+        surrender.setOnMouseClicked(surrenderEvent);
         doBuyHouse.setOnAction(buyHouseEvent);
         doNotBuyHouse.setOnAction(doNotBuyHouseEvent);
     }
@@ -182,6 +202,7 @@ public class SideScreen extends AnchorPane {
         initBuyHousePane();
         initPlayersLabels();
         initQuizPane();
+        initSurrenderButton();
     }
 
     private void initQuestionToBuyField() {
@@ -207,11 +228,23 @@ public class SideScreen extends AnchorPane {
     }
 
     private void initEndTurnButton() {
-        endTurnButton = new Button("Zakończ turę");
-        endTurnButton.setFont(new Font(18));
-        endTurnButton.setLayoutX(250);
-        endTurnButton.setLayoutY(600);
+        endTurnButton = new Button("ZAKOŃCZ\nTURĘ");
+        endTurnButton.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 20));
+        endTurnButton.setLayoutX(150);
+        endTurnButton.setLayoutY(560);
+        endTurnButton.setTextAlignment(TextAlignment.CENTER);
         endTurnButton.setVisible(false);
+    }
+
+    private void initSurrenderButton() {
+        Image flagImage = new Image("/flag.png");
+        surrender = new ImageView(flagImage);
+        surrender.setFitHeight(40);
+        surrender.setPreserveRatio(true);
+        surrender.setLayoutX(340);
+        surrender.setLayoutY(570);
+        surrender.setSmooth(true);
+        surrender.setVisible(true);
     }
 
     private AnchorPane createPlayerAnchorPane(String filename, int x, int y) throws IOException {

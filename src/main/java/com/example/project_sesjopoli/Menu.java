@@ -5,6 +5,7 @@ import com.example.project_sesjopoli.post_objects.PostObjectForSettingName;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,6 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -62,6 +64,20 @@ public class Menu extends AnchorPane {
             System.exit(0);
         };
         exitButton.setOnAction(exit);
+
+        Scale scale = new Scale(1.15, 1.15, 0, 0);
+        exitButton.setOnMouseEntered(event -> {
+            Bounds bounds = exitButton.getBoundsInLocal();
+            double centerX = bounds.getWidth() / 2;
+            double centerY = bounds.getHeight() / 2;
+
+            scale.setPivotX(centerX);
+            scale.setPivotY(centerY);
+            exitButton.getTransforms().add(scale);
+        });
+        exitButton.setOnMouseExited(event -> {
+            exitButton.getTransforms().remove(scale);
+        });
     }
 
     private void initPlayButton(Stage primaryStage, Scene gameScene) throws IOException {
@@ -79,6 +95,20 @@ public class Menu extends AnchorPane {
             }
         };
         playButton.setOnAction(play);
+
+        Scale scale = new Scale(1.15, 1.15, 0, 0);
+        playButton.setOnMouseEntered(event -> {
+            Bounds bounds = playButton.getBoundsInLocal();
+            double centerX = bounds.getWidth() / 2;
+            double centerY = bounds.getHeight() / 2;
+
+            scale.setPivotX(centerX);
+            scale.setPivotY(centerY);
+            playButton.getTransforms().add(scale);
+        });
+        playButton.setOnMouseExited(event -> {
+            playButton.getTransforms().remove(scale);
+        });
     }
     private void startGame(Stage primaryStage, Scene gameScene){
         RestTemplate restTemplate = new RestTemplate();
